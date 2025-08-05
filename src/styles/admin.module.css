@@ -1,0 +1,53 @@
+.formSection {
+  border: 1px solid #444;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  background-color: #1e1e2e;
+}
+
+.formSection h3 {
+  margin-top: 0;
+  color: #97dffc;
+  font-size: 1.1rem;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #666;
+  background-color: #1a1a2e;
+  color: #e0e0f5;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+
+.button {
+  background-color: #372c52;
+  color: #97dffc;
+  border: 1px solid #4e3b75;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.button:hover {
+  background-color: #4a3b6e;
+}
+
+.previewBox {
+  background-color: #111;
+  color: #97dffc;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  max-height: 250px;
+  margin-top: 1rem;
+}
