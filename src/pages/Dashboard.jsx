@@ -74,12 +74,7 @@ export default function Dashboard() {
         <img
           src={Controller}
           alt="Controller"
-          style={{
-            width: "45px",
-            height: "45px",
-            verticalAlign: "middle",
-            marginRight: "0.5rem",
-          }}
+          className={styles.inlineIconLarge}
         />
         Your Dashboard
       </h1>
@@ -100,7 +95,7 @@ export default function Dashboard() {
 
         <div className={styles.progressBar}>
           <div
-            className={styles.progress}
+            className={`${styles.progress} ${styles.progressDynamic}`}
             style={{ width: `${percentToNextLevel}%` }}
           />
         </div>

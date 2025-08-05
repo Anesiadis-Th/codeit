@@ -9,6 +9,7 @@ import "prismjs/components/prism-c"; // for C language support
 import "prismjs/themes/prism-tomorrow.css"; // or another theme you like
 import Footer from "../components/Footer";
 import CodeIcon from "../assets/code.png";
+import editorStyles from "../styles/editor.module.css";
 
 export default function Practice() {
   const [code, setCode] = useState(
@@ -68,12 +69,7 @@ export default function Practice() {
         <img
           src={CodeIcon}
           alt="Code"
-          style={{
-            width: "45px",
-            height: "45px",
-            verticalAlign: "middle",
-            marginRight: "0.5rem",
-          }}
+          className={globalStyles.inlineIconLarge}
         />
         Practice C Code
       </h1>
@@ -84,16 +80,7 @@ export default function Practice() {
           onValueChange={setCode}
           highlight={(code) => Prism.highlight(code, Prism.languages.c, "c")}
           padding={16}
-          style={{
-            fontFamily: '"Fira Code", monospace',
-            fontSize: 14,
-            backgroundColor: "#1a1a2e",
-            color: "#e0e0f5",
-            borderRadius: "8px",
-            border: "1px solid #444",
-            marginBottom: "1rem",
-            minHeight: "250px",
-          }}
+          className={editorStyles.editorBox}
         />
 
         <button

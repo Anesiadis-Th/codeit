@@ -15,9 +15,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <h1 className={`${styles.title} ${styles.titleUnderline}`}>
-          CodeIT: Learn C the Fun Way
-        </h1>
+        <h1 className={`${styles.title} `}>CodeIT: Learn C the Fun Way</h1>
         <p className={styles.subtitle}>
           <Typewriter
             words={["Gamified.", "Beginner-friendly.", "100% in-browser."]}
@@ -40,16 +38,7 @@ export default function Home() {
 
         <Link to="/lessons">
           <button className={styles.buttonPrimary}>
-            <img
-              src={rocket}
-              alt="Rocket"
-              style={{
-                width: "20px",
-                height: "20px",
-                marginRight: "0.5rem",
-                verticalAlign: "middle",
-              }}
-            />
+            <img src={rocket} alt="Rocket" className={styles.inlineIcon} />
             Start Learning
           </button>
         </Link>
@@ -58,11 +47,7 @@ export default function Home() {
       <InfoCard
         title="What is CodeIT?"
         icon={
-          <img
-            src={compiler}
-            alt="compiler"
-            style={{ width: "28px", height: "28px", verticalAlign: "middle" }}
-          />
+          <img src={compiler} alt="compiler" className={styles.inlineIcon} />
         }
         delay="0.2s"
       >
@@ -75,17 +60,7 @@ export default function Home() {
 
       <InfoCard
         title="Features"
-        icon={
-          <img
-            src={brain}
-            alt="Brain"
-            style={{
-              width: "28px",
-              height: "28px",
-              verticalAlign: "middle",
-            }}
-          />
-        }
+        icon={<img src={brain} alt="Brain" className={styles.inlineIcon} />}
         delay="0.6s"
       >
         <ul>
@@ -97,14 +72,8 @@ export default function Home() {
       </InfoCard>
 
       <InfoCard
-        title="Features"
-        icon={
-          <img
-            src={star}
-            alt="star"
-            style={{ width: "28px", height: "28px", verticalAlign: "middle" }}
-          />
-        }
+        title="Progress & Rewards"
+        icon={<img src={star} alt="Star" className={styles.inlineIcon} />}
         delay="0.2s"
       >
         <ul>
