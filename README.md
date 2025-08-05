@@ -1,12 +1,43 @@
-# React + Vite
+# 🚀 CodeIT – Learn C the Fun Way
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CodeIT is a gamified, beginner-friendly web app designed to teach the C programming language from the ground up — inspired by Duolingo, Mimo, and SoloLearn.
 
-Currently, two official plugins are available:
+Built with React and Supabase, it features lessons, quizzes, and an interactive C code compiler powered by the Judge0 API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🧠 Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🎓 Interactive lessons organized by sections (Welcome to C, Control Flow, Loops, etc.)
+- 🧩 Multiple question types: multiple-choice, fill-in-the-blank, and live coding
+- ⚡ In-browser C compiler via [Judge0 API](https://judge0.com)
+- 🏆 Gamification: XP, levels, streaks, and lesson tracking
+- 👩‍🏫 Admin panel with lesson editor (supports quizzes + code tasks)
+- 🔐 Secure Supabase Auth (email, Google, GitHub login)
+- 🧾 Responsive UI with custom CSS and modern design
+- 🧑‍🎓 Guest access by default — users can explore without logging in
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend:** React, React Router, Custom CSS Modules
+- **Backend/Auth/DB:** Supabase
+- **Compiler:** Judge0 REST API
+- **Build Tool:** Vite
+
+---
+
+## 📦 Installation
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/yourusername/codeit.git
+cd codeit
+
+# 2. Install dependencies
+npm install
+
+# 3. Start dev server
+npm run dev
+```
