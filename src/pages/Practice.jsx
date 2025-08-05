@@ -5,13 +5,15 @@ import { runCCode } from "../lib/judge0Service";
 import { supabase } from "../lib/supabaseClient";
 import Editor from "react-simple-code-editor";
 import Prism from "prismjs";
-import "prismjs/components/prism-c"; // for C language support
-import "prismjs/themes/prism-tomorrow.css"; // or another theme you like
+import "prismjs/components/prism-c";
+import "prismjs/themes/prism-tomorrow.css";
 import Footer from "../components/Footer";
 import CodeIcon from "../assets/code.png";
 import editorStyles from "../styles/editor.module.css";
+import { useTranslation } from "react-i18next"; // ✅ added
 
 export default function Practice() {
+  const { t } = useTranslation(); // ✅ added
   const [code, setCode] = useState(
     `#include <stdio.h>\nint main() {\n  printf("Hello, C!");\n  return 0;\n}`
   );
@@ -25,7 +27,6 @@ export default function Practice() {
     setOutput("");
 
     try {
-      // ✅ Check for authenticated user
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -40,7 +41,6 @@ export default function Practice() {
         });
       }
 
-      // Run code with Judge0
       const result = await runCCode(code);
 
       if (!isGuest && submission?.id) {
@@ -57,7 +57,7 @@ export default function Practice() {
 
       setOutput(result.stdout || result.stderr || "No output");
     } catch (err) {
-      setError("Execution failed: " + err.message);
+      setError(t("practice.executionFailed", { message: err.message }));
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ export default function Practice() {
           alt="Code"
           className={globalStyles.inlineIconLarge}
         />
-        Practice C Code
+        {t("practice.title")}
       </h1>
 
       <div className={`${globalStyles.card} ${globalStyles.cardAnimated}`}>
@@ -88,7 +88,7 @@ export default function Practice() {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? "Submitting..." : "Run Code"}
+          {loading ? t("practice.submitting") : t("practice.runCode")}
         </button>
 
         {output && !error && output !== "No output" && (
@@ -102,7 +102,7 @@ export default function Practice() {
               whiteSpace: "pre-wrap",
             }}
           >
-            ✅ Output: {output}
+            ✅ {t("practice.output")}: {output}
           </pre>
         )}
 
@@ -117,7 +117,7 @@ export default function Practice() {
               whiteSpace: "pre-wrap",
             }}
           >
-            ❌ {error || "No output, please check your code."}
+            ❌ {error || t("practice.noOutput")}
           </pre>
         )}
       </div>

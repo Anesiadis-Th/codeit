@@ -7,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 import styles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
 import Controller from "../assets/controller.png";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t, i18n } = useTranslation();
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [lessons, setLessons] = useState([]);
@@ -24,7 +26,14 @@ export default function Dashboard() {
 
       if (user) {
         const userStats = await getUserStats();
-        const allLessons = await fetchAllLessons();
+        const allLessonsRaw = await fetchAllLessons();
+        const lang = i18n.language || "en";
+
+        const allLessons = allLessonsRaw.map((lesson) => ({
+          ...lesson,
+          title: lesson[`title_${lang}`],
+        }));
+
         const userProgress = await fetchUserProgress();
 
         const progressMap = {};
@@ -39,7 +48,7 @@ export default function Dashboard() {
     };
 
     init();
-  }, []);
+  }, [i18n.language]);
 
   if (!user || !stats) {
     return (
@@ -76,21 +85,25 @@ export default function Dashboard() {
           alt="Controller"
           className={styles.inlineIconLarge}
         />
-        Your Dashboard
+        {t("dashboard.title")}
       </h1>
 
       <div className={`${styles.card} ${styles.cardAnimated}`}>
         <p>
-          👋 Welcome, <strong>{user.email}</strong>
+          👋 {t("dashboard.welcome")}, <strong>{user.email}</strong>
         </p>
         <p>
-          🔥 Streak: <strong>{stats.streak} day(s)</strong>
+          🔥 Streak:{" "}
+          <strong>
+            {stats.streak} {t("dashboard.days")}
+          </strong>
         </p>
         <p>
-          🎯 Level: <strong>{level}</strong>
+          🎯 {t("dashboard.level")}: <strong>{level}</strong>
         </p>
         <p>
-          📈 XP: <strong>{totalXP}</strong> (Need {xpToNext} XP to level up)
+          📈 {t("dashboard.xp")}: <strong>{totalXP}</strong> (
+          {t("dashboard.xpToNext", { xp: xpToNext })})
         </p>
 
         <div className={styles.progressBar}>
@@ -102,7 +115,7 @@ export default function Dashboard() {
       </div>
 
       <div className={`${styles.card} ${styles.cardAnimated}`}>
-        <h2>Your Lessons</h2>
+        <h2>{t("dashboard.yourLessons")}</h2>
         <ul className={styles.lessonList}>
           {lessons.map((lesson) => (
             <li key={lesson.id} className={styles.lessonItem}>
@@ -112,22 +125,23 @@ export default function Dashboard() {
           ))}
         </ul>
         <p>
-          ✅ {completedLessons.length}/{lessons.length} completed (
+          ✅ {completedLessons.length}/{lessons.length}{" "}
+          {t("dashboard.completed")} (
           {Math.round((completedLessons.length / lessons.length) * 100)}%)
         </p>
       </div>
 
       {nextLesson && (
         <div className={`${styles.card} ${styles.cardAnimated}`}>
-          <h2>▶️ Continue Learning</h2>
+          <h2>▶️ {t("dashboard.continueLearning")}</h2>
           <p>
-            Next up: <strong>{nextLesson.title}</strong>
+            {t("dashboard.nextUp")}: <strong>{nextLesson.title}</strong>
           </p>
           <button
             className={styles.buttonPrimary}
             onClick={() => navigate(`/lessons/${nextLesson.id}`)}
           >
-            Go to Lesson
+            {t("dashboard.goToLesson")}
           </button>
         </div>
       )}

@@ -4,8 +4,11 @@ import { supabase } from "../lib/supabaseClient";
 import { getUserStats } from "../lib/statsService";
 import styles from "../styles/header.module.css";
 import mascotLogo from "../assets/mascot_head.png";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
+  const { t } = useTranslation(); // ✅
+
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,13 +55,13 @@ export default function Header() {
 
       <div className={`${styles.right} ${menuOpen ? styles.showMenu : ""}`}>
         <nav className={styles.nav}>
-          <Link to="/lessons">Lessons</Link>
-          <Link to="/practice">Practice</Link>
-          {user && <Link to="/dashboard">Dashboard</Link>}
+          <Link to="/lessons">{t("header.lessons")}</Link>
+          <Link to="/practice">{t("header.practice")}</Link>
+          {user && <Link to="/dashboard">{t("header.dashboard")}</Link>}
           {!user && (
             <>
-              <Link to="/signup">Sign Up</Link>
-              <Link to="/login">Login</Link>
+              <Link to="/signup">{t("header.signup")}</Link>
+              <Link to="/login">{t("header.login")}</Link>
             </>
           )}
         </nav>
@@ -71,7 +74,7 @@ export default function Header() {
               <span className={styles.streak}> 🔥 {stats.streak}</span>
             </div>
             <button className={styles.logout} onClick={handleLogout}>
-              Logout
+              {t("header.logout")}
             </button>
           </div>
         )}

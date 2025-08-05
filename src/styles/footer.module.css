@@ -18,3 +18,61 @@
 .footer a:hover {
   color: #ffffff;
 }
+
+.socialLinks {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.socialLinks a {
+  display: inline-flex;
+  align-items: center;
+  color: #97dffc;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.socialLinks a:hover {
+  color: #ffffff;
+}
+
+.socialLinks a:hover img {
+  transform: scale(1.5);
+  filter: brightness(1.2);
+}
+
+.socialLinks img {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.languageSwitcher {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.languageSwitcher button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.languageSwitcher img {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.4s ease;
+}
+
+.languageSwitcher img:hover {
+  transform: scale(1.3);
+}

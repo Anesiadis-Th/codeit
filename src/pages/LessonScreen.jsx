@@ -11,13 +11,16 @@ import "prismjs/components/prism-c";
 import "prismjs/themes/prism-tomorrow.css";
 import globalStyles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
-import Icon from "../components/Icon";
 import lightbulb from "../assets/lightbulb.png";
 import Confetti from "react-confetti";
 import { useWindowSize } from "@react-hook/window-size";
 import editorStyles from "../styles/editor.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function LessonScreen() {
+  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+
   const { lessonId } = useParams();
   const navigate = useNavigate();
 
@@ -37,6 +40,16 @@ export default function LessonScreen() {
   const [showHint, setShowHint] = useState(false);
 
   const [width, height] = useWindowSize();
+
+  useEffect(() => {
+    const loadLesson = async () => {
+      const lessonData = await fetchLessonById(lessonId);
+      setLesson(lessonData);
+      setSteps(lessonData.steps || []);
+    };
+
+    loadLesson();
+  }, [lessonId, i18n.language]); // 🔁 refetches when language changes
 
   useEffect(() => {
     const init = async () => {
@@ -209,7 +222,10 @@ export default function LessonScreen() {
           </div>
 
           <h3>
-            Question {questionIndex + 1} of {steps.length}
+            {t("lesson.question", {
+              current: questionIndex + 1,
+              total: steps.length,
+            })}
           </h3>
 
           {currentStep.type !== "code" && <p>{currentStep.question}</p>}
@@ -225,7 +241,7 @@ export default function LessonScreen() {
                 className={globalStyles.hintButton}
                 onClick={() => setShowHint((prev) => !prev)}
               >
-                {showHint ? "Hide Hint" : "Need Help?"}
+                {showHint ? t("lesson.hideHint") : t("lesson.needHelp")}
               </button>
               <div
                 className={`${globalStyles.hintBox} ${
@@ -237,8 +253,6 @@ export default function LessonScreen() {
                   alt="Hint"
                   className={globalStyles.inlineHintIcon}
                 />
-
-                {currentStep.help}
 
                 {currentStep.help}
               </div>
@@ -281,7 +295,7 @@ export default function LessonScreen() {
 
           {currentStep.type === "code" && (
             <>
-              <p style={{ fontWeight: "bold" }}>Expected Output:</p>
+              <p style={{ fontWeight: "bold" }}>{t("lesson.expectedOutput")}</p>
               <pre className={globalStyles.expectedOutput}>
                 {currentStep.expectedOutput}
               </pre>
@@ -301,37 +315,27 @@ export default function LessonScreen() {
                 onClick={handleRunCode}
                 disabled={isRunning}
               >
-                {isRunning ? "Running..." : "Run Code"}
+                {isRunning ? t("lesson.running") : t("lesson.runCode")}
               </button>
 
               {codeOutput && (
                 <pre className={globalStyles.codeOutput}>
-                  Output: {codeOutput}
+                  {t("lesson.output")}: {codeOutput}
                 </pre>
               )}
 
               {codeError && (
-                <pre className={globalStyles.codeError}>
-                  <Icon
-                    name="XCircle"
-                    size={18}
-                    color="#550000"
-                    className={globalStyles.inlineHintIcon}
-                  />
-                  Error: {codeError}
-                </pre>
+                <pre className={globalStyles.codeError}>Error: {codeError}</pre>
               )}
 
               {isCorrect === true && (
                 <p className={editorStyles.successMessage}>
-                  <Icon name="CheckCircle" color="green" />
                   Output is correct!
                 </p>
               )}
 
               {isCorrect === false && (
                 <p className={editorStyles.errorMessage}>
-                  <Icon name="AlertTriangle" color="red" />
                   Output does not match expected result. Check your code again!
                 </p>
               )}
@@ -349,7 +353,7 @@ export default function LessonScreen() {
               (currentStep.type === "code" && (isRunning || !codeOutput))
             }
           >
-            Submit
+            {t("lesson.submit")}
           </button>
 
           {isCorrect !== null && currentStep.type !== "code" && (
@@ -360,14 +364,7 @@ export default function LessonScreen() {
                   : editorStyles.errorMessage
               }
             >
-              <Icon
-                name={isCorrect ? "CheckCircle" : "XCircle"}
-                color={isCorrect ? "green" : "red"}
-                size={18}
-              />
-              {isCorrect
-                ? "Correct!"
-                : "That’s not correct yet — review the options and try again!"}
+              {t(isCorrect ? "lesson.answerCorrect" : "lesson.answerWrong")}
             </p>
           )}
         </div>
@@ -375,20 +372,15 @@ export default function LessonScreen() {
 
       {completed && (
         <div className={globalStyles.cardStatic}>
-          <h3>🎉 Lesson Complete!</h3>
+          <h3>🎉 {t("lesson.completed")}</h3>
           {lesson.isGuest ? (
             <>
-              <p>Great job finishing the lesson!</p>
-              <p>
-                <strong>
-                  Sign up to save your progress and earn XP next time! 🔓
-                </strong>
-              </p>
+              <p>{t("lesson.guestMessage")}</p>
             </>
           ) : (
-            <p>You've earned 10 XP and kept your streak alive! 🔥</p>
+            <p>{t("lesson.signedInCongrats")}</p>
           )}
-          <p>Redirecting back to lessons...</p>
+          <p>{t("lesson.redirecting")}</p>
         </div>
       )}
 

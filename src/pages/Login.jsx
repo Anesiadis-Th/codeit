@@ -5,8 +5,10 @@ import globalStyles from "../styles/globals.module.css";
 import googleIcon from "../assets/googleIcon.png";
 import githubIcon from "../assets/githubIcon.png";
 import Footer from "../components/Footer";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { t } = useTranslation(); // ✅ added
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -23,7 +25,6 @@ export default function Login() {
       email,
       password,
     });
-
     if (error) setError(error.message);
     else navigate("/");
   };
@@ -37,7 +38,7 @@ export default function Login() {
     } else {
       setResetMessage({
         type: "success",
-        text: "Reset link sent! Check your email.",
+        text: t("login.resetSuccess"),
       });
       setResetEmail("");
     }
@@ -46,7 +47,7 @@ export default function Login() {
   return (
     <div className={globalStyles.container} style={{ maxWidth: "400px" }}>
       <h2 className={globalStyles.title} style={{ textAlign: "center" }}>
-        Welcome Back
+        {t("login.title")}
       </h2>
 
       <div className={globalStyles.cardStatic}>
@@ -55,7 +56,7 @@ export default function Login() {
             htmlFor="email"
             style={{ display: "block", marginBottom: "0.5rem" }}
           >
-            Email
+            {t("login.email")}
           </label>
           <input
             id="email"
@@ -71,7 +72,7 @@ export default function Login() {
             htmlFor="password"
             style={{ display: "block", marginBottom: "0.5rem" }}
           >
-            Password
+            {t("login.password")}
           </label>
           <input
             id="password"
@@ -88,7 +89,7 @@ export default function Login() {
             className={globalStyles.buttonPrimary}
             style={{ marginTop: "1rem", width: "100%" }}
           >
-            Login
+            {t("login.login")}
           </button>
 
           <div
@@ -151,12 +152,12 @@ export default function Login() {
             fontSize: "0.95rem",
           }}
         >
-          Don't have an account?{" "}
+          {t("login.noAccount")}{" "}
           <Link
             to="/signup"
             style={{ color: "#97dffc", textDecoration: "underline" }}
           >
-            Sign up
+            {t("login.signup")}
           </Link>
         </p>
 
@@ -171,14 +172,14 @@ export default function Login() {
           }}
           onClick={() => setResetVisible(!resetVisible)}
         >
-          Forgot your password?
+          {t("login.forgotPassword")}
         </p>
 
         {resetVisible && (
           <form onSubmit={handleResetPassword} style={{ marginTop: "1rem" }}>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder={t("login.enterEmail")}
               className={globalStyles.questionInput}
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
@@ -189,7 +190,7 @@ export default function Login() {
               className={globalStyles.buttonPrimary}
               style={{ width: "100%", marginTop: "0.5rem" }}
             >
-              Send reset link
+              {t("login.sendReset")}
             </button>
 
             {resetMessage && (
@@ -207,6 +208,7 @@ export default function Login() {
           </form>
         )}
       </div>
+
       <Footer />
     </div>
   );

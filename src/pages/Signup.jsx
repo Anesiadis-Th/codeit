@@ -5,8 +5,10 @@ import globalStyles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
 import googleIcon from "../assets/googleIcon.png";
 import githubIcon from "../assets/githubIcon.png";
+import { useTranslation } from "react-i18next";
 
 export default function Signup() {
+  const { t } = useTranslation(); // ✅ added
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,7 +20,7 @@ export default function Signup() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("signup.passwordsDontMatch"));
       return;
     }
 
@@ -28,14 +30,13 @@ export default function Signup() {
       setSuccess(false);
     } else {
       setSuccess(true);
-      // No redirect anymore
     }
   };
 
   return (
     <div className={globalStyles.container} style={{ maxWidth: "400px" }}>
       <h2 className={globalStyles.title} style={{ textAlign: "center" }}>
-        Create Your Account
+        {t("signup.title")}
       </h2>
 
       <div className={globalStyles.cardStatic}>
@@ -44,7 +45,7 @@ export default function Signup() {
             htmlFor="email"
             style={{ display: "block", marginBottom: "0.5rem" }}
           >
-            Email
+            {t("signup.email")}
           </label>
           <input
             id="email"
@@ -60,7 +61,7 @@ export default function Signup() {
             htmlFor="password"
             style={{ display: "block", marginBottom: "0.5rem" }}
           >
-            Password
+            {t("signup.password")}
           </label>
           <input
             id="password"
@@ -76,13 +77,13 @@ export default function Signup() {
             htmlFor="confirm"
             style={{ display: "block", marginBottom: "0.5rem" }}
           >
-            Confirm Password
+            {t("signup.confirmPassword")}
           </label>
           <input
             id="confirm"
             type="password"
             className={globalStyles.questionInput}
-            placeholder="Repeat password"
+            placeholder={t("signup.confirmPlaceholder")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -93,7 +94,7 @@ export default function Signup() {
             className={globalStyles.buttonPrimary}
             style={{ marginTop: "1rem", width: "100%" }}
           >
-            Sign Up
+            {t("signup.submit")}
           </button>
 
           {error && (
@@ -120,15 +121,11 @@ export default function Signup() {
                 textAlign: "center",
               }}
             >
-              ✅ Signup successful!
-              <br />
-              Please check your email to confirm your account.
-              <br />
-              Once confirmed, you can log in and start learning!
+              ✅ {t("signup.success")}
               <div style={{ marginTop: "1rem", textAlign: "center" }}>
                 <Link to="/login">
                   <button className={globalStyles.buttonPrimary}>
-                    Go to Login
+                    {t("signup.goToLogin")}
                   </button>
                 </Link>
               </div>
@@ -183,12 +180,12 @@ export default function Signup() {
             fontSize: "0.95rem",
           }}
         >
-          Already have an account?{" "}
+          {t("signup.haveAccount")}{" "}
           <Link
             to="/login"
             style={{ color: "#97dffc", textDecoration: "underline" }}
           >
-            Log in
+            {t("signup.login")}
           </Link>
         </p>
       </div>
