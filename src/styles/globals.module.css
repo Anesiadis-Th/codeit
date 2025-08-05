@@ -84,11 +84,23 @@ body {
   animation: fadeSlideIn 2s ease-out both;
 }
 
+.lessonTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
 .subtitle {
   font-size: 1.2rem;
   color: #bbbbdd;
   margin-bottom: 1.5rem;
   animation: fadeSlideIn 2.5s ease-out both;
+}
+
+.lessonStatus {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #ccccddff;
 }
 
 .heroMascot {
@@ -104,6 +116,40 @@ body {
   max-width: 100px;
   height: auto;
   display: inline-block;
+}
+
+.inlineIcon {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.inlineIconLarge {
+  width: 45px;
+  height: 45px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.inlineHintIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.progressDynamic {
+  height: 100%;
+  background: linear-gradient(to right, #97dffc, #613dc1);
+  transition: width 0.4s ease;
+}
+
+.progressText {
+  text-align: right;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* ====== Buttons ====== */

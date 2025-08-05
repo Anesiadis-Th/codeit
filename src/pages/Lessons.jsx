@@ -93,16 +93,7 @@ export default function Lessons() {
   return (
     <div className={globalStyles.container}>
       <h1 className={globalStyles.title}>
-        <img
-          src={Book}
-          alt="Book"
-          style={{
-            width: "45px",
-            height: "45px",
-            verticalAlign: "middle",
-            marginRight: "0.5rem",
-          }}
-        />
+        <img src={Book} alt="Book" className={globalStyles.inlineIconLarge} />
         Your Lessons
       </h1>
 
@@ -135,40 +126,17 @@ export default function Lessons() {
               const isCompleted = progress[lesson.id] === true;
 
               return (
-                <div
-                  key={lesson.id}
-                  className={globalStyles.lessonItem}
-                  style={{
-                    background: "#2a1a3c",
-                    borderRadius: "12px",
-                    padding: "1rem",
-                    margin: "0.5rem 0",
-                  }}
-                >
-                  <h4
-                    style={{
-                      margin: 0,
-                      fontWeight: "600",
-                      fontSize: "1.05rem",
-                    }}
-                  >
-                    {lesson.title}
-                  </h4>
-                  <p
-                    style={{
-                      margin: 0,
+                <div key={lesson.id} className={globalStyles.lessonItem}>
+                  <h4 className={globalStyles.lessonTitle}>{lesson.title}</h4>
 
-                      fontSize: "0.8rem",
-                      color: "#ccccddff",
-                    }}
-                  >
-                    {" "}
+                  <p className={globalStyles.lessonStatus}>
                     {hasProgress
                       ? isCompleted
                         ? "✅ Completed"
                         : "🕐 In Progress"
                       : " Uncompleted"}
                   </p>
+
                   <button
                     className={globalStyles.buttonPrimary}
                     onClick={() => handleLessonNavigation(lesson)}

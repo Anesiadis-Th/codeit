@@ -15,6 +15,7 @@ import Icon from "../components/Icon";
 import lightbulb from "../assets/lightbulb.png";
 import Confetti from "react-confetti";
 import { useWindowSize } from "@react-hook/window-size";
+import editorStyles from "../styles/editor.module.css";
 
 export default function LessonScreen() {
   const { lessonId } = useParams();
@@ -196,7 +197,7 @@ export default function LessonScreen() {
           } ${isCorrect === true ? globalStyles.pulseSuccess : ""}`}
         >
           <div className={globalStyles.progressWrapper}>
-            <p style={{ textAlign: "right", fontSize: "0.9rem", margin: 0 }}>
+            <p className={globalStyles.progressText}>
               {progress.toFixed(0)}% complete
             </p>
             <div className={globalStyles.progressBar}>
@@ -234,14 +235,9 @@ export default function LessonScreen() {
                 <img
                   src={lightbulb}
                   alt="Hint"
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    marginRight: "0.5rem",
-                    verticalAlign: "middle",
-                    display: "inline-block",
-                  }}
+                  className={globalStyles.inlineHintIcon}
                 />
+
                 {currentStep.help}
 
                 {currentStep.help}
@@ -297,19 +293,7 @@ export default function LessonScreen() {
                   Prism.highlight(code, Prism.languages.c, "c")
                 }
                 padding={16}
-                style={{
-                  fontFamily: '"Fira Code", monospace',
-                  fontSize: 14,
-                  backgroundColor: "#1a1a2e",
-                  color: "#e0e0f5",
-                  borderRadius: "8px",
-                  border: "1px solid #444",
-                  marginBottom: "1rem",
-                  minHeight: "250px",
-                  width: "100%", // ✅ Make it fluid
-                  boxSizing: "border-box", // ✅ Avoid overflow
-                  overflowX: "auto",
-                }}
+                className={editorStyles.editorBox}
               />
 
               <button
@@ -332,39 +316,21 @@ export default function LessonScreen() {
                     name="XCircle"
                     size={18}
                     color="#550000"
-                    style={{ marginRight: "0.5rem", verticalAlign: "middle" }}
+                    className={globalStyles.inlineHintIcon}
                   />
                   Error: {codeError}
                 </pre>
               )}
 
               {isCorrect === true && (
-                <p
-                  style={{
-                    color: "green",
-                    marginTop: "1rem",
-                    fontWeight: "bold",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <p className={editorStyles.successMessage}>
                   <Icon name="CheckCircle" color="green" />
                   Output is correct!
                 </p>
               )}
 
               {isCorrect === false && (
-                <p
-                  style={{
-                    color: "red",
-                    marginTop: "1rem",
-                    fontWeight: "bold",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <p className={editorStyles.errorMessage}>
                   <Icon name="AlertTriangle" color="red" />
                   Output does not match expected result. Check your code again!
                 </p>
@@ -388,14 +354,11 @@ export default function LessonScreen() {
 
           {isCorrect !== null && currentStep.type !== "code" && (
             <p
-              style={{
-                color: isCorrect ? "green" : "red",
-                marginTop: "1rem",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
+              className={
+                isCorrect
+                  ? editorStyles.successMessage
+                  : editorStyles.errorMessage
+              }
             >
               <Icon
                 name={isCorrect ? "CheckCircle" : "XCircle"}
