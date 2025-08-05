@@ -1,21 +1,22 @@
 import styles from "../styles/globals.module.css";
 import InfoCard from "../components/Card";
 import Footer from "../components/Footer";
-import Icon from "../components/Icon";
 import compiler from "../assets/compiler.png";
 import rocket from "../assets/rocket.png";
 import brain from "../assets/brain.svg";
 import star from "../assets/star.png";
 import mascot from "../assets/mascot.png";
 import { Typewriter } from "react-simple-typewriter";
-
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <h1 className={`${styles.title} `}>CodeIT: Learn C the Fun Way</h1>
+        <h1 className={styles.title}>CodeIT: {t("home.learnC")}</h1>
         <p className={styles.subtitle}>
           <Typewriter
             words={["Gamified.", "Beginner-friendly.", "100% in-browser."]}
@@ -39,48 +40,44 @@ export default function Home() {
         <Link to="/lessons">
           <button className={styles.buttonPrimary}>
             <img src={rocket} alt="Rocket" className={styles.inlineIcon} />
-            Start Learning
+            {t("home.startLearning")}
           </button>
         </Link>
       </div>
 
       <InfoCard
-        title="What is CodeIT?"
+        title={t("home.whatIsTitle")}
         icon={
           <img src={compiler} alt="compiler" className={styles.inlineIcon} />
         }
         delay="0.2s"
       >
-        <p>
-          CodeIT is a gamified platform designed to teach C programming step by
-          step. It's interactive, beginner-friendly, and fully in-browser — no
-          setup needed.
-        </p>
+        <p>{t("home.whatIsText")}</p>
       </InfoCard>
 
       <InfoCard
-        title="Features"
+        title={t("home.featuresTitle")}
         icon={<img src={brain} alt="Brain" className={styles.inlineIcon} />}
         delay="0.6s"
       >
         <ul>
-          <li>Write basic C programs with real code</li>
-          <li>Understand variables, data types, and control flow</li>
-          <li>Use loops, functions, and pointers effectively</li>
-          <li>Apply logic through hands-on quizzes and challenges</li>
+          <li>{t("home.feature1")}</li>
+          <li>{t("home.feature2")}</li>
+          <li>{t("home.feature3")}</li>
+          <li>{t("home.feature4")}</li>
         </ul>
       </InfoCard>
 
       <InfoCard
-        title="Progress & Rewards"
+        title={t("home.progressTitle")}
         icon={<img src={star} alt="Star" className={styles.inlineIcon} />}
         delay="0.2s"
       >
         <ul>
-          <li>Earn XP, level up, and keep your streak alive</li>
-          <li>Test your code instantly with a built-in C compiler</li>
-          <li>Track your progress and unlock new lessons</li>
-          <li>No stress — learn at your own pace, from any device</li>
+          <li>{t("home.progress1")}</li>
+          <li>{t("home.progress2")}</li>
+          <li>{t("home.progress3")}</li>
+          <li>{t("home.progress4")}</li>
         </ul>
       </InfoCard>
 

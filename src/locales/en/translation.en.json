@@ -1,0 +1,113 @@
+{
+  "header": {
+    "lessons": "Lessons",
+    "practice": "Practice",
+    "dashboard": "Dashboard",
+    "signup": "Sign Up",
+    "login": "Login",
+    "logout": "Logout"
+  },
+
+  "home": {
+    "learnC": "Learn C the Fun Way",
+    "startLearning": "Start Learning",
+    "whatIsTitle": "What is CodeIT?",
+    "whatIsText": "CodeIT is a gamified platform designed to teach C programming step by step. It's interactive, beginner-friendly, and fully in-browser — no setup needed.",
+    "featuresTitle": "Features",
+    "feature1": "Write basic C programs with real code",
+    "feature2": "Understand variables, data types, and control flow",
+    "feature3": "Use loops, functions, and pointers effectively",
+    "feature4": "Apply logic through hands-on quizzes and challenges",
+    "progressTitle": "Progress & Rewards",
+    "progress1": "Earn XP, level up, and keep your streak alive",
+    "progress2": "Test your code instantly with a built-in C compiler",
+    "progress3": "Track your progress and unlock new lessons",
+    "progress4": "No stress — learn at your own pace, from any device"
+  },
+  "dashboard": {
+    "title": "Your Dashboard",
+    "welcome": "Welcome",
+    "streak": "Streak",
+    "days": "day(s)",
+    "level": "Level",
+    "xp": "XP",
+    "xpToNext": "Need {{xp}} XP to level up",
+    "yourLessons": "Your Lessons",
+    "completed": "completed",
+    "continueLearning": "Continue Learning",
+    "nextUp": "Next up",
+    "goToLesson": "Go to Lesson"
+  },
+  "lessons": {
+    "pageTitle": "Your Lessons",
+    "sectionWelcome": "Welcome to C!",
+    "sectionGettingStarted": "Getting Started with C",
+    "sectionControlFlow": "Control Flow",
+    "sectionLoops": "Loops in C",
+    "sectionFunctions": "Functions in C",
+    "sectionArrays": "Arrays in C",
+    "sectionPointers": "Pointers in C",
+    "sectionOther": "Other Lessons",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Uncompleted",
+    "review": "Review Lesson",
+    "start": "Start Lesson"
+  },
+  "login": {
+    "title": "Welcome Back",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "noAccount": "Don't have an account?",
+    "signup": "Sign up",
+    "forgotPassword": "Forgot your password?",
+    "enterEmail": "Enter your email",
+    "sendReset": "Send reset link",
+    "resetSuccess": "Reset link sent! Check your email."
+  },
+
+  "signup": {
+    "title": "Create Your Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "confirmPlaceholder": "Repeat password",
+    "submit": "Sign Up",
+    "passwordsDontMatch": "Passwords do not match.",
+    "success": "Signup successful! Please check your email to confirm your account. Once confirmed, you can log in and start learning!",
+    "goToLogin": "Go to Login",
+    "haveAccount": "Already have an account?",
+    "login": "Log in"
+  },
+
+  "practice": {
+    "title": "Practice C Code",
+    "runCode": "Run Code",
+    "submitting": "Submitting...",
+    "output": "Output",
+    "noOutput": "No output, please check your code.",
+    "executionFailed": "Execution failed: {{message}}"
+  },
+
+  "lesson": {
+    "question": "Question {{current}} of {{total}}",
+    "needHelp": "Need Help?",
+    "hideHint": "Hide Hint",
+    "expectedOutput": "Expected Output",
+    "runCode": "Run Code",
+    "running": "Running...",
+    "output": "Output",
+    "error": "Error",
+    "outputCorrect": "Output is correct!",
+    "outputWrong": "Output does not match expected result. Check your code again!",
+    "submit": "Submit",
+    "answerCorrect": "Correct!",
+    "answerWrong": "That’s not correct yet — review the options and try again!",
+    "completed": "Lesson Complete!",
+    "guestMessage": "Great job finishing the lesson!\nSign up to save your progress and earn XP next time! 🔓",
+    "signedInCongrats": "You've earned 10 XP and kept your streak alive! 🔥",
+    "guestPrompt": "Sign up to save your progress and earn XP next time! 🔓",
+    "redirecting": "Redirecting back to lessons..."
+  }
+}

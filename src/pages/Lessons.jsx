@@ -5,35 +5,80 @@ import { useNavigate } from "react-router-dom";
 import globalStyles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
 import Book from "../assets/book.png";
+import { useTranslation } from "react-i18next";
 
-const sectionMap = {
-  welcome: "👋 Welcome to C!",
-  "getting-started": "🚀 Getting Started with C",
-  "control-flow": "🔍 Control Flow",
-  "loops-c": "🔄 Loops in C",
-  "functions-c": "🔧 Functions in C",
-  "arrays-c": "📊 Arrays in C",
-  "pointers-c": "📌 Pointers in C",
-  default: "📘 Other Lessons",
-};
-
-const sectionOrder = [
-  "welcome",
-  "getting-started",
-  "control-flow",
-  "loops-c",
-  "functions-c",
-  "arrays-c",
-  "pointers-c",
-  "default",
-];
-
-export default function Lessons() {
+const Lessons = () => {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState([]);
   const [progress, setProgress] = useState({});
   const [openSection, setOpenSection] = useState(null);
   const navigate = useNavigate();
+
+  const sectionMap = {
+    welcome: `👋 ${t("lessons.sectionWelcome")}`,
+    "getting-started": `🚀 ${t("lessons.sectionGettingStarted")}`,
+    "control-flow": `🔍 ${t("lessons.sectionControlFlow")}`,
+    "loops-c": `🔄 ${t("lessons.sectionLoops")}`,
+    "functions-c": `🔧 ${t("lessons.sectionFunctions")}`,
+    "arrays-c": `📊 ${t("lessons.sectionArrays")}`,
+    "pointers-c": `📌 ${t("lessons.sectionPointers")}`,
+    default: `📘 ${t("lessons.sectionOther")}`,
+  };
+
+  const sectionOrder = [
+    "welcome",
+    "getting-started",
+    "control-flow",
+    "loops-c",
+    "functions-c",
+    "arrays-c",
+    "pointers-c",
+    "default",
+  ];
+
+  useEffect(() => {
+    const init = async () => {
+      let progressMap = {};
+
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user && user.app_metadata?.provider !== "anonymous") {
+          const userProgress = await fetchUserProgress();
+          userProgress.forEach((item) => {
+            progressMap[item.lesson_id] = item.completed;
+          });
+        }
+      } catch (err) {
+        console.warn("Guest user — skipping progress fetch:", err.message);
+      }
+
+      const lang = i18n.language || "en";
+      const { data: allLessons, error } = await supabase
+        .from("lessons")
+        .select(`id, section_id, title_${lang}`)
+        .order("order", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching lessons:", error.message);
+        return;
+      }
+
+      const localizedLessons = allLessons.map((lesson) => ({
+        ...lesson,
+        title: lesson[`title_${lang}`],
+      }));
+
+      setProgress(progressMap);
+      setLessons(localizedLessons);
+      setLoading(false);
+    };
+
+    init();
+  }, [i18n.language]);
 
   useEffect(() => {
     const init = async () => {
@@ -94,7 +139,7 @@ export default function Lessons() {
     <div className={globalStyles.container}>
       <h1 className={globalStyles.title}>
         <img src={Book} alt="Book" className={globalStyles.inlineIconLarge} />
-        Your Lessons
+        {t("lessons.pageTitle")}
       </h1>
 
       {orderedSections.map(([sectionId, sectionLessons]) => (
@@ -132,9 +177,9 @@ export default function Lessons() {
                   <p className={globalStyles.lessonStatus}>
                     {hasProgress
                       ? isCompleted
-                        ? "✅ Completed"
-                        : "🕐 In Progress"
-                      : " Uncompleted"}
+                        ? "✅ " + t("lessons.completed")
+                        : "🕐 " + t("lessons.inProgress")
+                      : t("lessons.notStarted")}
                   </p>
 
                   <button
@@ -142,8 +187,8 @@ export default function Lessons() {
                     onClick={() => handleLessonNavigation(lesson)}
                   >
                     {hasProgress && isCompleted
-                      ? "Review Lesson"
-                      : "Start Lesson"}
+                      ? t("lessons.review")
+                      : t("lessons.start")}
                   </button>
                 </div>
               );
@@ -155,4 +200,6 @@ export default function Lessons() {
       <Footer />
     </div>
   );
-}
+};
+
+export default Lessons;

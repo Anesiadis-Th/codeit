@@ -2,30 +2,28 @@
 import styles from "../styles/footer.module.css";
 import github from "../assets/github.svg";
 import linkedin from "../assets/linkedin.png";
+import { useTranslation } from "react-i18next";
+import enIcon from "../assets/enIcon.png";
+import grIcon from "../assets/grIcon.png";
 
 export default function Footer() {
+  const { i18n } = useTranslation(); // ✅ added
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem("language", lng);
+  };
   return (
     <footer className={styles.footer}>
       <p>Built with 💜 by Theocharis Anesiadis · CodeIT © 2025</p>
 
-      <div style={{ marginTop: "0.5rem" }}>
+      <div className={styles.socialLinks}>
         <a
           href="https://github.com/Anesiadis-Th"
           target="_blank"
           rel="noreferrer"
-          style={{ marginRight: "0.5rem" }}
         >
-          <img
-            src={github}
-            alt=""
-            aria-hidden="true"
-            style={{
-              width: "18px",
-              height: "18px",
-              verticalAlign: "middle",
-              marginRight: "0.3rem",
-            }}
-          />
+          <img src={github} alt="GitHub" aria-hidden="true" />
           GitHub
         </a>
 
@@ -34,19 +32,25 @@ export default function Footer() {
           target="_blank"
           rel="noreferrer"
         >
-          <img
-            src={linkedin}
-            alt=""
-            aria-hidden="true"
-            style={{
-              width: "18px",
-              height: "18px",
-              verticalAlign: "middle",
-              marginRight: "0.3rem",
-            }}
-          />
+          <img src={linkedin} alt="LinkedIn" aria-hidden="true" />
           LinkedIn
         </a>
+      </div>
+
+      <div className={styles.languageSwitcher}>
+        <button
+          onClick={() => changeLanguage("en")}
+          aria-label="Switch to English"
+        >
+          <img src={enIcon} alt="English" />
+        </button>
+
+        <button
+          onClick={() => changeLanguage("gr")}
+          aria-label="Switch to Greek"
+        >
+          <img src={grIcon} alt="Greek" />
+        </button>
       </div>
     </footer>
   );
