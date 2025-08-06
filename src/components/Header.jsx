@@ -7,7 +7,7 @@ import mascotLogo from "../assets/mascot_head.png";
 import { useTranslation } from "react-i18next";
 
 export default function Header() {
-  const { t } = useTranslation(); // ✅
+  const { t } = useTranslation();
 
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);

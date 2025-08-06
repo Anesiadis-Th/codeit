@@ -4,10 +4,14 @@ import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 export default function AdminLessonEditor() {
-  const [title, setTitle] = useState("");
   const [id, setId] = useState("");
-  const [intro, setIntro] = useState("");
-  const [content, setContent] = useState(""); // Paragraphs separated by \n
+  const [sectionId, setSectionId] = useState("");
+  const [title_en, setTitleEn] = useState("");
+  const [title_gr, setTitleGr] = useState("");
+  const [intro_en, setIntroEn] = useState("");
+  const [intro_gr, setIntroGr] = useState("");
+  const [content_en, setContentEn] = useState("");
+  const [content_gr, setContentGr] = useState("");
   const [steps, setSteps] = useState([]);
 
   const [newStepType, setNewStepType] = useState("multiple-choice");
@@ -24,34 +28,33 @@ export default function AdminLessonEditor() {
   const [status, setStatus] = useState(null);
 
   const handleAddStep = () => {
+    let step;
     if (newStepType === "multiple-choice") {
-      const quizStep = {
+      step = {
         type: "multiple-choice",
         question: newStepData.question,
         options: newStepData.options.filter(Boolean),
         answer: Number(newStepData.answer),
         help: newStepData.help,
       };
-      setSteps([...steps, quizStep]);
     } else if (newStepType === "code") {
-      const codeStep = {
+      step = {
         type: "code",
         description: newStepData.description,
         starterCode: newStepData.starterCode,
         expectedOutput: newStepData.expectedOutput,
         help: newStepData.help,
       };
-      setSteps([...steps, codeStep]);
     } else if (newStepType === "fill-in-the-blank") {
-      const blankStep = {
+      step = {
         type: "fill-in-the-blank",
         question: newStepData.question,
         answer: newStepData.answer,
         help: newStepData.help,
       };
-      setSteps([...steps, blankStep]);
     }
 
+    setSteps([...steps, step]);
     setNewStepData({
       question: "",
       options: ["", "", "", ""],
@@ -68,7 +71,11 @@ export default function AdminLessonEditor() {
     setStatus("loading");
 
     try {
-      const contentArray = content
+      const contentEnArray = content_en
+        .split("\n")
+        .map((p) => p.trim())
+        .filter(Boolean);
+      const contentGrArray = content_gr
         .split("\n")
         .map((p) => p.trim())
         .filter(Boolean);
@@ -76,10 +83,15 @@ export default function AdminLessonEditor() {
       const { error } = await supabase.from("lessons").upsert([
         {
           id,
-          title,
-          intro,
-          content: contentArray,
-          steps,
+          section_id: sectionId,
+          title_en,
+          title_gr,
+          intro_en,
+          intro_gr,
+          content_en: contentEnArray,
+          content_gr: contentGrArray,
+          steps_en: steps,
+          steps_gr: steps, // copy for now
         },
       ]);
 
@@ -109,40 +121,73 @@ export default function AdminLessonEditor() {
           <input
             type="text"
             className={adminStyles.input}
-            placeholder="Lesson Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Section ID (e.g. pointers-c)"
+            value={sectionId}
+            onChange={(e) => setSectionId(e.target.value)}
+          />
+
+          <input
+            type="text"
+            className={adminStyles.input}
+            placeholder="Lesson Title (English)"
+            value={title_en}
+            onChange={(e) => setTitleEn(e.target.value)}
+          />
+
+          <input
+            type="text"
+            className={adminStyles.input}
+            placeholder="Lesson Title (Greek)"
+            value={title_gr}
+            onChange={(e) => setTitleGr(e.target.value)}
           />
 
           <textarea
             className={adminStyles.textarea}
-            placeholder="Lesson Intro (optional)"
-            value={intro}
-            onChange={(e) => setIntro(e.target.value)}
-            rows={3}
+            placeholder="Lesson Intro (English)"
+            value={intro_en}
+            onChange={(e) => setIntroEn(e.target.value)}
+            rows={2}
           />
 
           <textarea
             className={adminStyles.textarea}
-            placeholder="Lesson content (1 paragraph per line)"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={5}
+            placeholder="Lesson Intro (Greek)"
+            value={intro_gr}
+            onChange={(e) => setIntroGr(e.target.value)}
+            rows={2}
+          />
+
+          <textarea
+            className={adminStyles.textarea}
+            placeholder="Lesson content (English, 1 paragraph per line)"
+            value={content_en}
+            onChange={(e) => setContentEn(e.target.value)}
+            rows={4}
+          />
+
+          <textarea
+            className={adminStyles.textarea}
+            placeholder="Lesson content (Greek, 1 paragraph per line)"
+            value={content_gr}
+            onChange={(e) => setContentGr(e.target.value)}
+            rows={4}
           />
         </div>
 
         <div className={adminStyles.formSection}>
-          <h3>Add Question</h3>
+          <h3>Add Step</h3>
           <select
             value={newStepType}
             onChange={(e) => setNewStepType(e.target.value)}
             className={adminStyles.select}
           >
-            <option value="multiple-choice">Multiple Choice Question</option>
+            <option value="multiple-choice">Multiple Choice</option>
             <option value="fill-in-the-blank">Fill in the Blank</option>
             <option value="code">Code Task</option>
           </select>
 
+          {/* Step Inputs */}
           {newStepType === "multiple-choice" && (
             <>
               <input
@@ -162,21 +207,39 @@ export default function AdminLessonEditor() {
                   placeholder={`Option ${idx + 1}`}
                   value={opt}
                   onChange={(e) => {
-                    const updatedOptions = [...newStepData.options];
-                    updatedOptions[idx] = e.target.value;
-                    setNewStepData({
-                      ...newStepData,
-                      options: updatedOptions,
-                    });
+                    const updated = [...newStepData.options];
+                    updated[idx] = e.target.value;
+                    setNewStepData({ ...newStepData, options: updated });
                   }}
                 />
               ))}
               <input
                 type="number"
                 className={adminStyles.input}
-                min="0"
-                max={newStepData.options.length - 1}
                 placeholder="Correct Answer Index (0-based)"
+                value={newStepData.answer}
+                onChange={(e) =>
+                  setNewStepData({ ...newStepData, answer: e.target.value })
+                }
+              />
+            </>
+          )}
+
+          {newStepType === "fill-in-the-blank" && (
+            <>
+              <input
+                type="text"
+                className={adminStyles.input}
+                placeholder="Question with blank"
+                value={newStepData.question}
+                onChange={(e) =>
+                  setNewStepData({ ...newStepData, question: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                className={adminStyles.input}
+                placeholder="Correct Answer"
                 value={newStepData.answer}
                 onChange={(e) =>
                   setNewStepData({ ...newStepData, answer: e.target.value })
@@ -189,7 +252,7 @@ export default function AdminLessonEditor() {
             <>
               <textarea
                 className={adminStyles.textarea}
-                placeholder="Description (what user should do)"
+                placeholder="Description"
                 value={newStepData.description}
                 onChange={(e) =>
                   setNewStepData({
@@ -201,7 +264,7 @@ export default function AdminLessonEditor() {
               />
               <textarea
                 className={adminStyles.textarea}
-                placeholder="Starter C code"
+                placeholder="Starter Code"
                 value={newStepData.starterCode}
                 onChange={(e) =>
                   setNewStepData({
@@ -227,29 +290,6 @@ export default function AdminLessonEditor() {
             </>
           )}
 
-          {newStepType === "fill-in-the-blank" && (
-            <>
-              <input
-                type="text"
-                className={adminStyles.input}
-                placeholder="Question with a blank (e.g. 'C is a ____ language')"
-                value={newStepData.question}
-                onChange={(e) =>
-                  setNewStepData({ ...newStepData, question: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                className={adminStyles.input}
-                placeholder="Correct Answer"
-                value={newStepData.answer}
-                onChange={(e) =>
-                  setNewStepData({ ...newStepData, answer: e.target.value })
-                }
-              />
-            </>
-          )}
-
           <textarea
             className={adminStyles.textarea}
             placeholder="Hint (optional)"
@@ -270,7 +310,7 @@ export default function AdminLessonEditor() {
         </div>
 
         <div className={adminStyles.formSection}>
-          <h3>Question Preview</h3>
+          <h3>Step Preview</h3>
           <pre className={adminStyles.previewBox}>
             {JSON.stringify(steps, null, 2)}
           </pre>

@@ -14,6 +14,8 @@ import Footer from "../components/Footer";
 import tick from "../assets/tick.png";
 import xIcon from "../assets/x.png";
 import lightbulb from "../assets/lightbulb.png";
+import codyCelebrate from "../assets/cody_celebrate.png";
+
 import Confetti from "react-confetti";
 import { useWindowSize } from "@react-hook/window-size";
 import editorStyles from "../styles/editor.module.css";
@@ -395,16 +397,24 @@ export default function LessonScreen() {
       )}
 
       {completed && (
-        <div className={globalStyles.cardStatic}>
-          <h3>🎉 {t("lesson.completed")}</h3>
-          {lesson.isGuest ? (
-            <>
+        <div
+          className={`${globalStyles.cardStatic} ${globalStyles.cardCelebrateWrapper}`}
+        >
+          <div className={globalStyles.cardCelebrateText}>
+            <h3>🎉 {t("lesson.completed")}</h3>
+            {lesson.isGuest ? (
               <p>{t("lesson.guestMessage")}</p>
-            </>
-          ) : (
-            <p>{t("lesson.signedInCongrats")}</p>
-          )}
-          <p>{t("lesson.redirecting")}</p>
+            ) : (
+              <p>{t("lesson.signedInCongrats")}</p>
+            )}
+            <p>{t("lesson.redirecting")}</p>
+          </div>
+
+          <img
+            src={codyCelebrate}
+            alt="Celebrating Robot"
+            className={globalStyles.cardCelebrateImage}
+          />
         </div>
       )}
 

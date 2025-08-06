@@ -1,4 +1,3 @@
-// src/components/InfoCard.jsx
 import styles from "../styles/globals.module.css";
 
 export default function InfoCard({ title, icon, children, delay = "0s" }) {

@@ -8,7 +8,7 @@ import githubIcon from "../assets/githubIcon.png";
 import { useTranslation } from "react-i18next";
 
 export default function Signup() {
-  const { t } = useTranslation(); // ✅ added
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
