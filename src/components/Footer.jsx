@@ -1,13 +1,13 @@
 // src/components/Footer.jsx
 import styles from "../styles/footer.module.css";
-import github from "../assets/github.svg";
+import github from "../assets/github.png";
 import linkedin from "../assets/linkedin.png";
 import { useTranslation } from "react-i18next";
 import enIcon from "../assets/enIcon.png";
 import grIcon from "../assets/grIcon.png";
 
 export default function Footer() {
-  const { i18n } = useTranslation(); // ✅ added
+  const { i18n } = useTranslation(); 
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);

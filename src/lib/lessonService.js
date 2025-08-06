@@ -19,7 +19,6 @@ export async function fetchAllLessons() {
 
   if (error) throw error;
 
-  // Normalize the language-specific title
   const lessons = data.map((lesson) => ({
     ...lesson,
     title: lesson[`title_${lang}`],

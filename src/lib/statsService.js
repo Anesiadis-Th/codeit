@@ -6,7 +6,7 @@ export async function initUserStats() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.app_metadata?.provider === "anonymous") return; // ⛔ skip guest
+  if (!user || user.app_metadata?.provider === "anonymous") return; //  skip guest
 
   const { data, error } = await supabase
     .from("user_stats")
@@ -33,7 +33,7 @@ export async function awardXP(amount = 10) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.app_metadata?.provider === "anonymous") return; // ⛔ skip guest
+  if (!user || user.app_metadata?.provider === "anonymous") return; // skip guest
 
   const today = new Date().toISOString().slice(0, 10);
 

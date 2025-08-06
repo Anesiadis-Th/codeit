@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 import Controller from "../assets/controller.png";
 import tickIcon from "../assets/tick.png";
 import clockIcon from "../assets/clock.png";
-import cody_coding from "../assets/cody_coding.svg";
+import cody_coding from "../assets/cody_coding.png";
 import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {

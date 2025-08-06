@@ -9,7 +9,7 @@ export async function submitCode({ lessonId, code, languageId = 50 }) {
   if (userError) throw userError;
   if (!user) throw new Error("User not logged in");
 
-  // 1. Insert the submission (minimal return)
+  // Insert the submission (minimal return)
   const { error: insertError } = await supabase.from("submissions").insert([
     {
       user_id: user.id,
@@ -23,7 +23,7 @@ export async function submitCode({ lessonId, code, languageId = 50 }) {
 
   if (insertError) throw insertError;
 
-  // 2. Fetch latest submission by this user & lesson
+  //Fetch latest submission by this user & lesson
   const { data: rows, error: fetchError } = await supabase
     .from("submissions")
     .select("*")
@@ -37,5 +37,5 @@ export async function submitCode({ lessonId, code, languageId = 50 }) {
     throw new Error("Submission inserted, but failed to fetch.");
   }
 
-  return rows[0]; // ✅ the inserted submission
+  return rows[0];
 }

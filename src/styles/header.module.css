@@ -1,4 +1,6 @@
 .header {
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -172,12 +174,5 @@
     justify-content: center;
     font-size: 0.85rem;
     text-align: center;
-  }
-}
-
-@media (min-width: 769px) {
-  .header {
-    position: sticky;
-    top: 0;
   }
 }

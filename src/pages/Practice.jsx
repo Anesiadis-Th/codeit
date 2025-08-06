@@ -10,10 +10,10 @@ import "prismjs/themes/prism-tomorrow.css";
 import Footer from "../components/Footer";
 import CodeIcon from "../assets/code.png";
 import editorStyles from "../styles/editor.module.css";
-import { useTranslation } from "react-i18next"; // ✅ added
+import { useTranslation } from "react-i18next";
 
 export default function Practice() {
-  const { t } = useTranslation(); // ✅ added
+  const { t } = useTranslation();
   const [code, setCode] = useState(
     `#include <stdio.h>\nint main() {\n  printf("Hello, C!");\n  return 0;\n}`
   );
