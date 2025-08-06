@@ -7,6 +7,9 @@
 
 html,
 body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
@@ -116,6 +119,79 @@ body {
   max-width: 100px;
   height: auto;
   display: inline-block;
+}
+
+.cardMascot {
+  position: absolute;
+  bottom: -10px;
+  right: -1px;
+  width: 100px;
+  height: auto;
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.cardWithMascotWrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.cardBehindMascot {
+  position: absolute;
+  top: -88px;
+  right: 5px;
+  width: 130px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .cardBehindMascot {
+    top: -55px;
+    right: 10px;
+    width: 80px;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .cardBehindMascot {
+    top: -34px;
+    right: 15px;
+    width: 50px;
+  }
+}
+
+.card {
+  position: relative;
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .quizCardMascot {
+    bottom: -10px;
+    right: -10px;
+    width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quizCardMascot {
+    bottom: -5px;
+    right: -5px;
+    width: 60px;
+  }
+}
+
+.statusIcon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
 }
 
 .inlineIcon {

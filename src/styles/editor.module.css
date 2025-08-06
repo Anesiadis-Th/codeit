@@ -13,7 +13,7 @@
 }
 
 .successMessage {
-  color: green;
+  color: #c8e6c9;
   margin-top: 1rem;
   font-weight: bold;
   display: flex;
@@ -22,39 +22,7 @@
 }
 
 .errorMessage {
-  color: red;
-  margin-top: 1rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.editorBox {
-  font-family: "Fira Code", monospace;
-  font-size: 14px;
-  background-color: #1a1a2e;
-  color: #e0e0f5;
-  border-radius: 8px;
-  border: 1px solid #444;
-  margin-bottom: 1rem;
-  min-height: 250px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
-}
-
-.successMessage {
-  color: green;
-  margin-top: 1rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.errorMessage {
-  color: red;
+  color: #f44336;
   margin-top: 1rem;
   font-weight: bold;
   display: flex;

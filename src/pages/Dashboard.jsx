@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import styles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
 import Controller from "../assets/controller.png";
+import tickIcon from "../assets/tick.png";
+import clockIcon from "../assets/clock.png";
+import cody_coding from "../assets/cody_coding.svg";
 import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
@@ -88,7 +91,13 @@ export default function Dashboard() {
         {t("dashboard.title")}
       </h1>
 
-      <div className={`${styles.card} ${styles.cardAnimated}`}>
+      <div
+        className={`${styles.card} ${styles.cardAnimated}`}
+        style={{ position: "relative", overflow: "hidden" }}
+      >
+        {/* Faded mascot */}
+        <img src={cody_coding} alt="Mascot" className={styles.cardMascot} />
+
         <p>
           👋 {t("dashboard.welcome")}, <strong>{user.email}</strong>
         </p>
@@ -120,7 +129,21 @@ export default function Dashboard() {
           {lessons.map((lesson) => (
             <li key={lesson.id} className={styles.lessonItem}>
               <span>{lesson.title}</span>
-              <span>{progress[lesson.id] ? "✅" : "🕐"}</span>
+              <span>
+                {progress[lesson.id] ? (
+                  <img
+                    src={tickIcon}
+                    alt="Completed"
+                    className={styles.statusIcon}
+                  />
+                ) : (
+                  <img
+                    src={clockIcon}
+                    alt="Completed"
+                    className={styles.statusIcon}
+                  />
+                )}
+              </span>
             </li>
           ))}
         </ul>

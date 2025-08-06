@@ -104,6 +104,8 @@
     "submit": "Submit",
     "answerCorrect": "Correct!",
     "answerWrong": "That’s not correct yet — review the options and try again!",
+    "codeOutputCorrect": "Output is correct!",
+    "codeOutputIncorrect": "Output does not match expected result. Check your code again!",
     "completed": "Lesson Complete!",
     "guestMessage": "Great job finishing the lesson!\nSign up to save your progress and earn XP next time! 🔓",
     "signedInCongrats": "You've earned 10 XP and kept your streak alive! 🔥",
