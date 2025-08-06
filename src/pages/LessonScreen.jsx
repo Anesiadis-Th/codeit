@@ -11,6 +11,8 @@ import "prismjs/components/prism-c";
 import "prismjs/themes/prism-tomorrow.css";
 import globalStyles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
+import tick from "../assets/tick.png";
+import xIcon from "../assets/x.png";
 import lightbulb from "../assets/lightbulb.png";
 import Confetti from "react-confetti";
 import { useWindowSize } from "@react-hook/window-size";
@@ -49,7 +51,7 @@ export default function LessonScreen() {
     };
 
     loadLesson();
-  }, [lessonId, i18n.language]); // 🔁 refetches when language changes
+  }, [lessonId, i18n.language]); // refetches when language changes
 
   useEffect(() => {
     const init = async () => {
@@ -325,18 +327,35 @@ export default function LessonScreen() {
               )}
 
               {codeError && (
-                <pre className={globalStyles.codeError}>Error: {codeError}</pre>
+                <pre className={globalStyles.codeError}>
+                  <img
+                    src={xIcon}
+                    alt="Error"
+                    className={globalStyles.statusIcon}
+                  />
+                  {codeError}
+                </pre>
               )}
 
               {isCorrect === true && (
                 <p className={editorStyles.successMessage}>
-                  Output is correct!
+                  <img
+                    src={tick}
+                    alt="Correct"
+                    className={globalStyles.statusIcon}
+                  />
+                  {t("lesson.codeOutputCorrect")}
                 </p>
               )}
 
               {isCorrect === false && (
                 <p className={editorStyles.errorMessage}>
-                  Output does not match expected result. Check your code again!
+                  <img
+                    src={xIcon}
+                    alt="Wrong"
+                    className={globalStyles.statusIcon}
+                  />
+                  {t("lesson.codeOutputIncorrect")}
                 </p>
               )}
             </>
@@ -364,6 +383,11 @@ export default function LessonScreen() {
                   : editorStyles.errorMessage
               }
             >
+              <img
+                src={isCorrect ? tick : xIcon}
+                alt={isCorrect ? "Correct" : "Wrong"}
+                className={globalStyles.statusIcon}
+              />
               {t(isCorrect ? "lesson.answerCorrect" : "lesson.answerWrong")}
             </p>
           )}

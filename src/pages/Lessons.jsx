@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import globalStyles from "../styles/globals.module.css";
 import Footer from "../components/Footer";
 import Book from "../assets/book.png";
+import tickIcon from "../assets/tick.png";
 import { useTranslation } from "react-i18next";
+import cody_hello from "../assets/cody_hello.png";
 
 const Lessons = () => {
   const { t, i18n } = useTranslation();
@@ -142,57 +144,77 @@ const Lessons = () => {
         {t("lessons.pageTitle")}
       </h1>
 
-      {orderedSections.map(([sectionId, sectionLessons]) => (
-        <div
-          key={sectionId}
-          className={`${globalStyles.card} ${globalStyles.cardAnimated}`}
-        >
-          <h3
-            onClick={() =>
-              setOpenSection((prev) => (prev === sectionId ? null : sectionId))
-            }
-            className={`${globalStyles.accordionHeader} ${
-              openSection === sectionId ? globalStyles.open : ""
-            }`}
-          >
-            <span>{sectionMap[sectionId] || sectionId}</span>
-            <span className={globalStyles.accordionIcon}>▶</span>
-          </h3>
+      {orderedSections.map(([sectionId, sectionLessons], index) => (
+        <div key={sectionId} className={globalStyles.cardWithMascotWrapper}>
+          {index === 0 && (
+            <img
+              src={cody_hello}
+              alt="Welcome mascot"
+              className={globalStyles.cardBehindMascot}
+            />
+          )}
 
-          <div
-            className={`${globalStyles.accordionContent} ${
-              openSection === sectionId
-                ? globalStyles.open
-                : globalStyles.closed
-            }`}
-          >
-            {sectionLessons.map((lesson) => {
-              const hasProgress = progress[lesson.id] !== undefined;
-              const isCompleted = progress[lesson.id] === true;
+          <div className={`${globalStyles.card} ${globalStyles.cardAnimated}`}>
+            <h3
+              onClick={() =>
+                setOpenSection((prev) =>
+                  prev === sectionId ? null : sectionId
+                )
+              }
+              className={`${globalStyles.accordionHeader} ${
+                openSection === sectionId ? globalStyles.open : ""
+              }`}
+            >
+              <span>{sectionMap[sectionId] || sectionId}</span>
+              <span className={globalStyles.accordionIcon}>▶</span>
+            </h3>
 
-              return (
-                <div key={lesson.id} className={globalStyles.lessonItem}>
-                  <h4 className={globalStyles.lessonTitle}>{lesson.title}</h4>
+            <div
+              className={`${globalStyles.accordionContent} ${
+                openSection === sectionId
+                  ? globalStyles.open
+                  : globalStyles.closed
+              }`}
+            >
+              {sectionLessons.map((lesson) => {
+                const hasProgress = progress[lesson.id] !== undefined;
+                const isCompleted = progress[lesson.id] === true;
 
-                  <p className={globalStyles.lessonStatus}>
-                    {hasProgress
-                      ? isCompleted
-                        ? "✅ " + t("lessons.completed")
-                        : "🕐 " + t("lessons.inProgress")
-                      : t("lessons.notStarted")}
-                  </p>
+                return (
+                  <div key={lesson.id} className={globalStyles.lessonItem}>
+                    <h4 className={globalStyles.lessonTitle}>{lesson.title}</h4>
 
-                  <button
-                    className={globalStyles.buttonPrimary}
-                    onClick={() => handleLessonNavigation(lesson)}
-                  >
-                    {hasProgress && isCompleted
-                      ? t("lessons.review")
-                      : t("lessons.start")}
-                  </button>
-                </div>
-              );
-            })}
+                    <p className={globalStyles.lessonStatus}>
+                      {hasProgress ? (
+                        isCompleted ? (
+                          <>
+                            <img
+                              src={tickIcon}
+                              alt="Completed"
+                              className={globalStyles.statusIcon}
+                            />
+                            {t("lessons.completed")}
+                          </>
+                        ) : (
+                          "🕐 " + t("lessons.inProgress")
+                        )
+                      ) : (
+                        t("lessons.notStarted")
+                      )}
+                    </p>
+
+                    <button
+                      className={globalStyles.buttonPrimary}
+                      onClick={() => handleLessonNavigation(lesson)}
+                    >
+                      {hasProgress && isCompleted
+                        ? t("lessons.review")
+                        : t("lessons.start")}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       ))}
