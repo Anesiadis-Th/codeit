@@ -101,35 +101,37 @@ export default function Login() {
               flexWrap: "wrap",
             }}
           >
-            <button
-              type="button"
-              onClick={() =>
-                supabase.auth.signInWithOAuth({ provider: "google" })
-              }
-              className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGoogle}`}
-            >
-              <img
-                src={googleIcon}
-                alt="Google"
-                style={{ width: "20px", height: "20px" }}
-              />
-              Google
-            </button>
+            <div className={globalStyles.authButtons}>
+              <button
+                type="button"
+                onClick={() =>
+                  supabase.auth.signInWithOAuth({ provider: "google" })
+                }
+                className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGoogle}`}
+              >
+                <img
+                  src={googleIcon}
+                  alt="Google"
+                  style={{ width: "20px", height: "20px" }}
+                />
+                Google
+              </button>
 
-            <button
-              type="button"
-              onClick={() =>
-                supabase.auth.signInWithOAuth({ provider: "github" })
-              }
-              className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGitHub}`}
-            >
-              <img
-                src={githubIcon}
-                alt="GitHub"
-                style={{ width: "20px", height: "20px" }}
-              />
-              GitHub
-            </button>
+              <button
+                type="button"
+                onClick={() =>
+                  supabase.auth.signInWithOAuth({ provider: "github" })
+                }
+                className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGitHub}`}
+              >
+                <img
+                  src={githubIcon}
+                  alt="GitHub"
+                  style={{ width: "20px", height: "20px" }}
+                />
+                GitHub
+              </button>
+            </div>
           </div>
 
           {error && (

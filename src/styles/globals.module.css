@@ -831,3 +831,19 @@ body {
     width: 60px;
   }
 }
+
+@media (max-width: 420px) {
+  .authButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: stretch;
+  }
+
+  .buttonOAuth {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 0 0 auto;
+  }
+}
