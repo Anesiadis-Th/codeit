@@ -16,6 +16,11 @@ const Lessons = () => {
   const [progress, setProgress] = useState({});
   const [openSection, setOpenSection] = useState(null);
   const navigate = useNavigate();
+  const getLang = () => {
+    const raw = (i18n.language || "en").toLowerCase();
+    if (raw.startsWith("gr") || raw.startsWith("el")) return "gr";
+    return "en";
+  };
 
   const sectionMap = {
     welcome: `👋 ${t("lessons.sectionWelcome")}`,
@@ -47,7 +52,6 @@ const Lessons = () => {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-
         if (user && user.app_metadata?.provider !== "anonymous") {
           const userProgress = await fetchUserProgress();
           userProgress.forEach((item) => {
@@ -58,10 +62,10 @@ const Lessons = () => {
         console.warn("Guest user — skipping progress fetch:", err.message);
       }
 
-      const lang = i18n.language || "en";
+      // ✅ select both columns; don't interpolate a dynamic column name
       const { data: allLessons, error } = await supabase
         .from("lessons")
-        .select(`id, section_id, title_${lang}`)
+        .select("id, section_id, title_en, title_gr")
         .order("order", { ascending: true });
 
       if (error) {
@@ -69,9 +73,10 @@ const Lessons = () => {
         return;
       }
 
+      const lang = getLang();
       const localizedLessons = allLessons.map((lesson) => ({
         ...lesson,
-        title: lesson[`title_${lang}`],
+        title: lang === "gr" ? lesson.title_gr : lesson.title_en,
       }));
 
       setProgress(progressMap);
@@ -81,42 +86,6 @@ const Lessons = () => {
 
     init();
   }, [i18n.language]);
-
-  useEffect(() => {
-    const init = async () => {
-      let progressMap = {};
-
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user && user.app_metadata?.provider !== "anonymous") {
-          const userProgress = await fetchUserProgress();
-          userProgress.forEach((item) => {
-            progressMap[item.lesson_id] = item.completed;
-          });
-        }
-      } catch (err) {
-        console.warn("Guest user — skipping progress fetch:", err.message);
-      }
-
-      const { data: allLessons, error } = await supabase
-        .from("lessons")
-        .select("*")
-        .order("order", { ascending: true });
-
-      if (error) {
-        console.error("Error fetching lessons:", error.message);
-        return;
-      }
-
-      setProgress(progressMap);
-      setLessons(allLessons);
-      setLoading(false);
-    };
-
-    init();
-  }, []);
 
   const grouped = lessons.reduce((acc, lesson) => {
     const section = lesson.section_id || "default";
