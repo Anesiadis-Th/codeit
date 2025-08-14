@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchLessonById } from "../lib/lessonService";
 import { completeLesson } from "../lib/progressService";
 import { awardXP } from "../lib/statsService";
@@ -15,7 +15,6 @@ import tick from "../assets/tick.png";
 import xIcon from "../assets/x.png";
 import lightbulb from "../assets/lightbulb.png";
 import codyCelebrate from "../assets/cody_celebrate.png";
-
 import Confetti from "react-confetti";
 import { useWindowSize } from "@react-hook/window-size";
 import editorStyles from "../styles/editor.module.css";
@@ -45,42 +44,58 @@ export default function LessonScreen() {
 
   const [width, height] = useWindowSize();
 
-  useEffect(() => {
-    const loadLesson = async () => {
-      const lessonData = await fetchLessonById(lessonId);
-      setLesson(lessonData);
-      setSteps(lessonData.steps || []);
-    };
-
-    loadLesson();
-  }, [lessonId, i18n.language]); // refetches when language changes
+  const normLang = useCallback(() => {
+    const raw = (i18n.language || "en").toLowerCase();
+    if (raw.startsWith("gr") || raw.startsWith("el")) return "gr";
+    return "en";
+  }, [i18n.language]);
 
   useEffect(() => {
     const init = async () => {
-      const lessonData = await fetchLessonById(lessonId);
+      const base = await fetchLessonById(lessonId);
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
       const isGuest = !user || user.app_metadata?.provider === "anonymous";
 
-      setLesson({ ...lessonData, isGuest });
+      const lang = normLang();
 
-      const normalizedSteps = lessonData.steps.map((step) =>
-        step.type === "code_task" ? { ...step, type: "code" } : step
+      const localized = {
+        id: base.id,
+        section_id: base.section_id,
+        title:
+          lang === "gr"
+            ? base.title_gr || base.title_en
+            : base.title_en || base.title_gr,
+        intro:
+          lang === "gr"
+            ? base.intro_gr || base.intro_en
+            : base.intro_en || base.intro_gr,
+        content:
+          lang === "gr"
+            ? base.content_gr || base.content_en
+            : base.content_en || base.content_gr,
+        steps:
+          lang === "gr"
+            ? base.steps_gr || base.steps_en
+            : base.steps_en || base.steps_gr,
+        isGuest,
+      };
+
+      const normalizedSteps = (localized.steps || []).map((s) =>
+        s?.type === "code_task" ? { ...s, type: "code" } : s
       );
 
+      setLesson(localized);
       setSteps(normalizedSteps);
 
-      const firstCodeStep = normalizedSteps.find(
-        (step) => step.type === "code"
-      );
-      if (firstCodeStep) {
-        setCode(firstCodeStep.starterCode);
-      }
+      const firstCode = normalizedSteps.find((s) => s.type === "code");
+      if (firstCode) setCode(firstCode.starterCode);
     };
 
     init();
-  }, [lessonId]);
+  }, [lessonId, normLang]);
 
   useEffect(() => {
     setShowHint(false);
