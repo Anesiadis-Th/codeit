@@ -1,58 +1,41 @@
 import { supabase } from "./supabaseClient";
-import i18n from "i18next";
 
 // Fetch all lessons
 export async function fetchAllLessons() {
-  const lang = i18n.language || "en";
-
   const { data, error } = await supabase
     .from("lessons")
     .select(
       `
       id,
       section_id,
-      order,
-      title_${lang}
+      "order",
+      title_en,
+      title_gr
     `
     )
     .order("order", { ascending: true });
 
   if (error) throw error;
-
-  const lessons = data.map((lesson) => ({
-    ...lesson,
-    title: lesson[`title_${lang}`],
-  }));
-
-  return lessons;
+  return data;
 }
 
 // Fetch one lesson by ID
 export async function fetchLessonById(id) {
-  const lang = i18n.language || "en";
-
   const { data, error } = await supabase
     .from("lessons")
     .select(
       `
       id,
       section_id,
-      title_${lang},
-      intro_${lang},
-      content_${lang},
-      steps_${lang}
+      title_en, title_gr,
+      intro_en, intro_gr,
+      content_en, content_gr,
+      steps_en, steps_gr
     `
     )
     .eq("id", id)
     .single();
 
   if (error) throw error;
-
-  return {
-    ...data,
-    title: data[`title_${lang}`],
-    intro: data[`intro_${lang}`],
-    content: data[`content_${lang}`],
-    steps: data[`steps_${lang}`],
-  };
+  return data;
 }

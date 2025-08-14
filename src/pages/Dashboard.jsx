@@ -30,15 +30,19 @@ export default function Dashboard() {
       if (user) {
         const userStats = await getUserStats();
         const allLessonsRaw = await fetchAllLessons();
-        const lang = i18n.language || "en";
+
+        const raw = (i18n.language || "en").toLowerCase();
+        const lang = raw.startsWith("gr") || raw.startsWith("el") ? "gr" : "en";
 
         const allLessons = allLessonsRaw.map((lesson) => ({
           ...lesson,
-          title: lesson[`title_${lang}`],
+          title:
+            lang === "gr"
+              ? lesson.title_gr || lesson.title_en
+              : lesson.title_en || lesson.title_gr,
         }));
 
         const userProgress = await fetchUserProgress();
-
         const progressMap = {};
         userProgress.forEach((p) => {
           progressMap[p.lesson_id] = p.completed;
