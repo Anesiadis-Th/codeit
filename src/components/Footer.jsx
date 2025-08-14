@@ -7,7 +7,7 @@ import enIcon from "../assets/enIcon.png";
 import grIcon from "../assets/grIcon.png";
 
 export default function Footer() {
-  const { i18n } = useTranslation(); 
+  const { i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -39,6 +39,7 @@ export default function Footer() {
 
       <div className={styles.languageSwitcher}>
         <button
+          type="button"
           onClick={() => changeLanguage("en")}
           aria-label="Switch to English"
         >
@@ -46,6 +47,7 @@ export default function Footer() {
         </button>
 
         <button
+          type="button"
           onClick={() => changeLanguage("gr")}
           aria-label="Switch to Greek"
         >

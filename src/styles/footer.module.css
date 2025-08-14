@@ -6,6 +6,8 @@
   color: #c6c6d1;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   opacity: 1;
+  position: relative;
+  z-index: 10;
 }
 
 .footer a {
@@ -58,6 +60,9 @@
   display: flex;
   justify-content: center;
   gap: 0.5rem;
+  position: relative;
+  z-index: 11;
+  pointer-events: auto;
 }
 
 .languageSwitcher button {
@@ -65,12 +70,18 @@
   border: none;
   cursor: pointer;
   padding: 0;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .languageSwitcher img {
   width: 28px;
   height: 28px;
   transition: transform 0.4s ease;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .languageSwitcher img:hover {
