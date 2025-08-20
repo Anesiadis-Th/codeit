@@ -21,41 +21,62 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
+
     const init = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      if (!isMounted) return;
       setUser(user);
 
-      if (user) {
-        const userStats = await getUserStats();
-        const allLessonsRaw = await fetchAllLessons();
+      const userStats = await getUserStats().catch(() => null);
+      const allLessonsRaw = await fetchAllLessons();
 
-        const raw = (i18n.language || "en").toLowerCase();
-        const lang = raw.startsWith("gr") || raw.startsWith("el") ? "gr" : "en";
+      const raw = (i18n.language || "en").toLowerCase();
+      const lang = raw.startsWith("gr") || raw.startsWith("el") ? "gr" : "en";
 
-        const allLessons = allLessonsRaw.map((lesson) => ({
-          ...lesson,
-          title:
-            lang === "gr"
-              ? lesson.title_gr || lesson.title_en
-              : lesson.title_en || lesson.title_gr,
-        }));
+      const allLessons = allLessonsRaw.map((lesson) => ({
+        ...lesson,
+        title:
+          lang === "gr"
+            ? lesson.title_gr || lesson.title_en
+            : lesson.title_en || lesson.title_gr,
+      }));
 
-        const userProgress = await fetchUserProgress();
-        const progressMap = {};
-        userProgress.forEach((p) => {
-          progressMap[p.lesson_id] = p.completed;
-        });
+      const userProgress = await fetchUserProgress();
+      const progressMap = {};
+      userProgress.forEach((p) => {
+        progressMap[p.lesson_id] = p.completed;
+      });
 
-        setStats(userStats);
-        setLessons(allLessons);
-        setProgress(progressMap);
-      }
+      if (!isMounted) return;
+      setStats(userStats);
+      setLessons(allLessons);
+      setProgress(progressMap);
     };
 
     init();
-  }, [i18n.language]);
+
+    // keep dashboard in sync with auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_evt, session) => {
+      const u = session?.user || null;
+      if (!u) navigate("/login");
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [i18n.language, navigate]);
 
   if (!user || !stats) {
     return (
