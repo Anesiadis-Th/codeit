@@ -14,18 +14,49 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      setUser(data.user);
-      if (data.user) {
-        const userStats = await getUserStats();
+    // initial check on mount
+    const load = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user || null);
+      if (user) {
+        const userStats = await getUserStats().catch(() => null);
         setStats(userStats);
+      } else {
+        setStats(null);
+      }
+    };
+    load();
+
+    // stay in sync with login/logout
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const u = session?.user || null;
+      setUser(u);
+      if (u) {
+        const userStats = await getUserStats().catch(() => null);
+        setStats(userStats);
+      } else {
+        setStats(null);
       }
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.reload();
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (e) {
+      console.error("signOut error:", e);
+    } finally {
+      setUser(null);
+      setStats(null);
+      window.location.replace("/");
+    }
   };
 
   return (
@@ -66,13 +97,15 @@ export default function Header() {
           )}
         </nav>
 
-        {user && stats && (
+        {user && (
           <div className={styles.user}>
-            <div className={styles.statsLine}>
-              <span>Lv {stats.level}</span>
-              <span>· XP {stats.xp} ·</span>
-              <span className={styles.streak}> 🔥 {stats.streak}</span>
-            </div>
+            {stats && (
+              <div className={styles.statsLine}>
+                <span>Lv {stats.level}</span>
+                <span>· XP {stats.xp} ·</span>
+                <span className={styles.streak}> 🔥 {stats.streak}</span>
+              </div>
+            )}
             <button className={styles.logout} onClick={handleLogout}>
               {t("header.logout")}
             </button>

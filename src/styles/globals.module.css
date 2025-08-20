@@ -815,6 +815,21 @@ body {
   .codeError {
     font-size: 0.9rem;
   }
+  .radioLabel {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .radioInput {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .radioLabel span {
+    line-height: 1.4;
+    word-break: break-word;
+    flex: 1;
+  }
 }
 
 /* Responsive: max-width 480px */
@@ -829,5 +844,15 @@ body {
     bottom: -5px;
     right: -5px;
     width: 60px;
+  }
+}
+
+@media (max-width: 395px) {
+  .buttonOAuth {
+    min-width: 120px;
+    padding: 0.5rem 0.75rem;
+    font-size: 13px;
+    flex: 0 1 auto;
+    max-width: none;
   }
 }
