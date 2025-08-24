@@ -296,7 +296,7 @@ export default function LessonScreen() {
                     checked={selected === idx}
                     onChange={() => setSelected(idx)}
                   />
-                  <span className={globalStyles.truncate}>{opt}</span>
+                  <span className={globalStyles.optionText}>{opt}</span>
                 </label>
               ))}
           </form>

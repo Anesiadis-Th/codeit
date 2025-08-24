@@ -19,7 +19,11 @@ export default function Home() {
         <h1 className={styles.title}>CodeIT: {t("home.learnC")}</h1>
         <p className={styles.subtitle}>
           <Typewriter
-            words={["Gamified.", "Beginner-friendly.", "100% in-browser."]}
+            words={[
+              "100% Free.",
+              "Beginner-friendly.",
+              "No installation required.",
+            ]}
             loop={true}
             cursor
             cursorStyle="_"

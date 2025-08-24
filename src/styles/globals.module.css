@@ -414,7 +414,7 @@ body {
 
 .radioForm {
   position: relative;
-  max-width: 28em;
+  max-width: 36em;
   width: 100%;
   margin: 1rem 0;
 }
@@ -423,7 +423,8 @@ body {
   background-color: transparent;
   border-radius: 0.75em;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* ⬅️ top-align the radio with multi-line text */
+  gap: 0.75rem; /* ⬅️ consistent space between circle and text */
   padding: 1rem;
   margin-bottom: 0.5rem;
   transition: background-color 0.3s ease;
@@ -437,14 +438,16 @@ body {
 
 .radioInput {
   appearance: none;
-  width: 1.5em;
-  height: 1.5em;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   margin-right: 1rem;
   background-color: #1a1a2e;
   box-shadow: 0 0 0 1px #97dffc, 0 0.125em 0.125em rgba(0, 0, 0, 0.3);
   position: relative;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  flex: 0 0 20px;
+  margin-top: 0.25rem;
 }
 
 .radioInput::before,
@@ -645,12 +648,6 @@ body {
   margin-right: 0.5rem;
   vertical-align: middle;
   display: inline-block;
-}
-
-.truncate {
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* ===== Code output ===== */

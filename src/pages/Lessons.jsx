@@ -62,7 +62,6 @@ const Lessons = () => {
         console.warn("Guest user — skipping progress fetch:", err.message);
       }
 
-      // ✅ select both columns; don't interpolate a dynamic column name
       const { data: allLessons, error } = await supabase
         .from("lessons")
         .select("id, section_id, title_en, title_gr")

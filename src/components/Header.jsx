@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { getUserStats } from "../lib/statsService";
 import styles from "../styles/header.module.css";
 import mascotLogo from "../assets/mascot_head.png";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { t } = useTranslation();
@@ -14,38 +15,64 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // initial check on mount
+    let alive = true;
+
     const load = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      if (!alive) return;
       setUser(user || null);
-      if (user) {
-        const userStats = await getUserStats().catch(() => null);
-        setStats(userStats);
-      } else {
-        setStats(null);
-      }
+      // 💡 no stats fetch here
     };
     load();
 
-    // stay in sync with login/logout
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const u = session?.user || null;
-      setUser(u);
-      if (u) {
-        const userStats = await getUserStats().catch(() => null);
-        setStats(userStats);
-      } else {
-        setStats(null);
-      }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!alive) return;
+      setUser(session?.user || null);
+      // 💡 no stats fetch here
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      alive = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
+  // Fetch stats safely whenever a real user is set
+  const statsSeq = useRef(0);
+
+  useEffect(() => {
+    let alive = true;
+
+    // if signed out, clear stats and bail
+    if (!user) {
+      setStats(null);
+      return () => {};
+    }
+
+    const run = async () => {
+      const mySeq = ++statsSeq.current;
+
+      // Try to get stats; if it errors, we just show no stats (never crash UI)
+      const s = await getUserStats().catch(() => null);
+
+      // Ignore stale results (in case user changed while this was fetching)
+      if (!alive || mySeq !== statsSeq.current) return;
+
+      setStats(s);
+    };
+
+    run();
+
+    return () => {
+      alive = false;
+    };
+  }, [user]);
+
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -54,8 +81,8 @@ export default function Header() {
       console.error("signOut error:", e);
     } finally {
       setUser(null);
-      setStats(null);
-      window.location.replace("/");
+      setStats(null); // harmless; we won't render stats for now
+      navigate("/"); // 👈 soft redirect keeps SPA stable after logout
     }
   };
 
