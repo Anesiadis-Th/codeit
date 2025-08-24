@@ -2,7 +2,7 @@
 
 👉 Live at [**code-it.gr**](https://code-it.gr)
 
-CodeIT is a gamified, beginner-friendly web app designed to teach the **C programming language** from the ground up — inspired by Duolingo, Mimo, and SoloLearn.
+CodeIT is a gamified, beginner-friendly web app designed to teach the **C programming language** from the ground up — inspired by Duolingo and Mimo.
 
 Built with **React** and **Supabase**, it features structured lessons, quizzes, and an interactive C compiler powered by the **Judge0 API** — all directly in the browser.
 
