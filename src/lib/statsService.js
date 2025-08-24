@@ -66,7 +66,11 @@ export async function awardXP(amount = 10) {
 export async function getUserStats() {
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
+
+  if (userError) throw userError;
+  if (!user) return null; // 👈 guard: no query if not logged in
 
   const { data, error } = await supabase
     .from("user_stats")

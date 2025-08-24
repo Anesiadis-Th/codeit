@@ -36,8 +36,12 @@ export default function Dashboard() {
       if (!isMounted) return;
       setUser(user);
 
-      const userStats = await getUserStats().catch(() => null);
-      const allLessonsRaw = await fetchAllLessons();
+      // Load data, but don't hard-block the whole page on stats
+      const [userStats, allLessonsRaw, userProgress] = await Promise.all([
+        getUserStats().catch(() => null),
+        fetchAllLessons(),
+        fetchUserProgress(),
+      ]);
 
       const raw = (i18n.language || "en").toLowerCase();
       const lang = raw.startsWith("gr") || raw.startsWith("el") ? "gr" : "en";
@@ -50,9 +54,8 @@ export default function Dashboard() {
             : lesson.title_en || lesson.title_gr,
       }));
 
-      const userProgress = await fetchUserProgress();
       const progressMap = {};
-      userProgress.forEach((p) => {
+      (userProgress || []).forEach((p) => {
         progressMap[p.lesson_id] = p.completed;
       });
 
@@ -64,7 +67,6 @@ export default function Dashboard() {
 
     init();
 
-    // keep dashboard in sync with auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_evt, session) => {
@@ -78,7 +80,7 @@ export default function Dashboard() {
     };
   }, [i18n.language, navigate]);
 
-  if (!user || !stats) {
+  if (!user) {
     return (
       <div className={styles.container}>
         <div className={styles.spinner}></div>
@@ -87,7 +89,7 @@ export default function Dashboard() {
   }
 
   const completedLessons = lessons.filter((l) => progress[l.id]);
-  const totalXP = stats.xp;
+  const totalXP = stats?.xp ?? 0;
 
   const getXPForLevel = (lvl) => 20 + (lvl - 1) * 30;
 
@@ -127,10 +129,7 @@ export default function Dashboard() {
           👋 {t("dashboard.welcome")}, <strong>{user.email}</strong>
         </p>
         <p>
-          🔥 Streak:{" "}
-          <strong>
-            {stats.streak} {t("dashboard.days")}
-          </strong>
+          🔥 Streak: <strong>{stats ? stats.streak : "…"}</strong>
         </p>
         <p>
           🎯 {t("dashboard.level")}: <strong>{level}</strong>
