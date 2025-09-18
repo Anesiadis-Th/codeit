@@ -91,7 +91,7 @@ export default function AdminLessonEditor() {
           content_en: contentEnArray,
           content_gr: contentGrArray,
           steps_en: steps,
-          steps_gr: steps, // copy for now
+          steps_gr: steps,
         },
       ]);
 
