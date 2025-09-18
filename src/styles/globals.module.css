@@ -623,7 +623,7 @@ body {
 }
 
 .accordionContent.open {
-  max-height: 1000px; /* should be higher than your content height */
+  max-height: 1000px;
   opacity: 1;
   transform: translateY(0);
 }
