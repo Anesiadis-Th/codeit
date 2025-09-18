@@ -107,6 +107,8 @@
     "codeOutputCorrect": "Output is correct!",
     "codeOutputIncorrect": "Output does not match expected result. Check your code again!",
     "completed": "Lesson Complete!",
+    "skippedNoXP": "Completed, but you did not earn XP because you used the Skip button.",
+
     "guestMessage": "Great job finishing the lesson!\nSign up to save your progress and earn XP next time! 🔓",
     "signedInCongrats": "You've earned 10 XP and kept your streak alive! 🔥",
     "guestPrompt": "Sign up to save your progress and earn XP next time! 🔓",

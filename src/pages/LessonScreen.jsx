@@ -34,6 +34,7 @@ export default function LessonScreen() {
   const [inputAnswer, setInputAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(null);
   const [completed, setCompleted] = useState(false);
+  const [hasSkipped, setHasSkipped] = useState(false);
 
   const [code, setCode] = useState("");
   const [codeOutput, setCodeOutput] = useState("");
@@ -177,8 +178,13 @@ export default function LessonScreen() {
     if (correct) {
       if (questionIndex === steps.length - 1) {
         setCompleted(true);
+        await completeLesson(lesson.id);
 
-        setTimeout(() => navigate("/lessons"), 9000);
+        if (!hasSkipped) {
+          await awardXP(10);
+        }
+
+        setTimeout(() => navigate("/lessons"), 8000);
 
         await completeLesson(lesson.id);
         await awardXP(10);
@@ -197,6 +203,27 @@ export default function LessonScreen() {
           });
         }, 1000);
       }
+    }
+  };
+
+  const handleSkip = () => {
+    setHasSkipped(true);
+
+    if (questionIndex === steps.length - 1) {
+      setCompleted(true);
+      setTimeout(() => navigate("/lessons"), 5000);
+    } else {
+      setSelected(null);
+      setInputAnswer("");
+      setIsCorrect(null);
+      setShowHint(false);
+      setQuestionIndex((prev) => {
+        const nextIndex = prev + 1;
+        if (steps[nextIndex]?.type === "code") {
+          setCode(steps[nextIndex].starterCode);
+        }
+        return nextIndex;
+      });
     }
   };
 
@@ -392,6 +419,14 @@ export default function LessonScreen() {
             {t("lesson.submit")}
           </button>
 
+          <button
+            type="button"
+            className={globalStyles.buttonSecondary}
+            onClick={handleSkip}
+          >
+            {"Skip Question"}
+          </button>
+
           {isCorrect !== null && currentStep.type !== "code" && (
             <p
               className={
@@ -419,6 +454,8 @@ export default function LessonScreen() {
             <h3>🎉 {t("lesson.completed")}</h3>
             {lesson.isGuest ? (
               <p>{t("lesson.guestMessage")}</p>
+            ) : hasSkipped ? (
+              <p>{t("lesson.skippedNoXP")}</p>
             ) : (
               <p>{t("lesson.signedInCongrats")}</p>
             )}

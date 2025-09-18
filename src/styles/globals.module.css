@@ -320,6 +320,32 @@ body {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.buttonSecondary {
+  margin-left: auto;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  background: #454878;
+  color: #e2e2e2;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(97, 63, 193, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.buttonSecondary:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 18px #8285b5;
+}
 
 .hintButton {
   padding: 0.5rem 1rem;
@@ -423,8 +449,8 @@ body {
   background-color: transparent;
   border-radius: 0.75em;
   display: flex;
-  align-items: flex-start; /* ⬅️ top-align the radio with multi-line text */
-  gap: 0.75rem; /* ⬅️ consistent space between circle and text */
+  align-items: flex-start;
+  gap: 0.75rem;
   padding: 1rem;
   margin-bottom: 0.5rem;
   transition: background-color 0.3s ease;
