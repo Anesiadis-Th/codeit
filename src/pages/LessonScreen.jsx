@@ -276,9 +276,7 @@ export default function LessonScreen() {
 
           {currentStep.type !== "code" && <p>{currentStep.question}</p>}
           {currentStep.type === "code" && currentStep.description && (
-            <p style={{ fontStyle: "italic", marginBottom: "0.5rem" }}>
-              {currentStep.description}
-            </p>
+            <p className="descriptionText">{currentStep.description}</p>
           )}
 
           {currentStep.help && (
