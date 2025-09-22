@@ -438,6 +438,11 @@ body {
 
 /* ===== Forms ===== */
 
+.descriptionText {
+  white-space: pre-line;
+  margin-bottom: 0.5rem;
+}
+
 .radioForm {
   position: relative;
   max-width: 36em;
