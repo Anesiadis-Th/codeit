@@ -18,7 +18,7 @@ import cody_coding from "../assets/cody_coding.png";
 function StatRow({ icon: Icon, label, children }) {
   return (
     <p className="flex items-center gap-2.5">
-      <Icon className="size-4.5 shrink-0 text-accent-300" aria-hidden="true" />
+      {Icon && <Icon className="size-4.5 shrink-0 text-accent-300" aria-hidden="true" />}
       {label}: <strong>{children}</strong>
     </p>
   );

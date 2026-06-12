@@ -9,7 +9,7 @@ import mascot from "../assets/mascot.png";
 function CardTitle({ icon: Icon, children }) {
   return (
     <h2 className="mb-3 flex items-center gap-2.5 text-xl font-semibold text-white">
-      <Icon className="size-5 shrink-0 text-accent-300" aria-hidden="true" />
+      {Icon && <Icon className="size-5 shrink-0 text-accent-300" aria-hidden="true" />}
       {children}
     </h2>
   );
