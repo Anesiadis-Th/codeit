@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Brand */
+  --color-brand-300: #858ae3;
+  --color-brand-500: #613dc1;
+  --color-brand-700: #4e148c;
+  --color-brand-900: #1d0b33;
+
+  /* Accent */
+  --color-accent-300: #97dffc;
+
+  /* Dark surfaces, page -> raised */
+  --color-surface-950: #1a1124;
+  --color-surface-900: #1e0f2f;
+  --color-surface-800: #2a1a3c;
+  --color-surface-700: #3a2551;
+  --color-ink-900: #1a1a2e;
+
+  /* Lines & muted */
+  --color-border-soft: #4a2a75;
+  --color-hint: #64438a;
+
+  /* Feedback */
+  --color-success-300: #6ee7a8;
+  --color-danger-300: #ff7a7a;
+  --color-streak: #ff7aa2;
+
+  /* Text */
+  --color-fg: #e0e0f5;
+  --color-fg-muted: #bbbbdd;
+
+  /* Motion */
+  --animate-fade-up: fade-up 0.5s ease both;
+  --animate-float: float 3.5s ease-in-out infinite;
+  --animate-shake: shake 0.4s ease;
+  --animate-pulse-success: pulse-success 1.2s ease;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-6px);
+    }
+    40% {
+      transform: translateX(6px);
+    }
+    60% {
+      transform: translateX(-4px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes pulse-success {
+    0% {
+      box-shadow: 0 0 0 0 --alpha(var(--color-success-300) / 50%);
+    }
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+}
+
+/* Gradient headline used across pages */
+@utility text-gradient {
+  background-image: linear-gradient(to right, var(--color-accent-300), var(--color-brand-300));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-surface-950 text-fg font-sans antialiased overflow-x-hidden;
+  }
+}
