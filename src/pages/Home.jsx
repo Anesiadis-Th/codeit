@@ -1,28 +1,45 @@
-import styles from "../styles/globals.module.css";
-import InfoCard from "../components/Card";
-import Footer from "../components/Footer";
-import compiler from "../assets/compiler.png";
-import rocket from "../assets/rocket.png";
-import brain from "../assets/brain.svg";
-import star from "../assets/star.png";
-import mascot from "../assets/mascot.png";
+import { useNavigate } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Brain, Cpu, Rocket, Star } from "lucide-react";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import mascot from "../assets/mascot.png";
+
+function CardTitle({ icon: Icon, children }) {
+  return (
+    <h2 className="mb-3 flex items-center gap-2.5 text-xl font-semibold text-white">
+      <Icon className="size-5 shrink-0 text-accent-300" aria-hidden="true" />
+      {children}
+    </h2>
+  );
+}
 
 export default function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
-    <div className={styles.container}>
-      <div className={styles.hero}>
-        <h1 className={styles.title}>CodeIT: {t("home.learnC")}</h1>
-        <p className={styles.subtitle}>
+    <div className="mx-auto max-w-3xl px-4 pb-8">
+      <section className="relative px-4 py-14 text-center sm:py-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-150 max-w-none -translate-x-1/2 rounded-full bg-[radial-gradient(circle,#613dc1_0%,transparent_70%)] opacity-15"
+        />
+
+        <h1 className="text-gradient animate-fade-up text-4xl font-bold sm:text-5xl">
+          CodeIT: {t("home.learnC")}
+        </h1>
+
+        <p
+          className="animate-fade-up mt-5 text-lg text-fg-muted"
+          style={{ animationDelay: "150ms" }}
+        >
           <Typewriter
             words={[
-              "100% Free.",
-              "Beginner-friendly.",
-              "No installation required.",
+              t("home.typewriter1"),
+              t("home.typewriter2"),
+              t("home.typewriter3"),
             ]}
             loop={true}
             cursor
@@ -33,59 +50,45 @@ export default function Home() {
           />
         </p>
 
-        <div className={styles.heroMascot}>
-          <img
-            src={mascot}
-            alt="CodeIT Mascot"
-            className={styles.heroMascotImage}
-          />
-        </div>
+        <img
+          src={mascot}
+          alt="CodeIT Mascot"
+          className="animate-float mx-auto mt-8 w-24 drop-shadow-[0_0_8px_#613dc1]"
+        />
 
-        <Link to="/lessons">
-          <button className={styles.buttonPrimary}>
-            <img src={rocket} alt="Rocket" className={styles.inlineIcon} />
+        <div className="mt-8">
+          <Button icon={Rocket} onClick={() => navigate("/lessons")}>
             {t("home.startLearning")}
-          </button>
-        </Link>
+          </Button>
+        </div>
+      </section>
+
+      <div className="space-y-6">
+        <Card animated delay={150}>
+          <CardTitle icon={Cpu}>{t("home.whatIsTitle")}</CardTitle>
+          <p className="leading-relaxed text-fg-muted">{t("home.whatIsText")}</p>
+        </Card>
+
+        <Card animated delay={300}>
+          <CardTitle icon={Brain}>{t("home.featuresTitle")}</CardTitle>
+          <ul className="list-disc space-y-1.5 pl-5 leading-relaxed text-fg-muted">
+            <li>{t("home.feature1")}</li>
+            <li>{t("home.feature2")}</li>
+            <li>{t("home.feature3")}</li>
+            <li>{t("home.feature4")}</li>
+          </ul>
+        </Card>
+
+        <Card animated delay={450}>
+          <CardTitle icon={Star}>{t("home.progressTitle")}</CardTitle>
+          <ul className="list-disc space-y-1.5 pl-5 leading-relaxed text-fg-muted">
+            <li>{t("home.progress1")}</li>
+            <li>{t("home.progress2")}</li>
+            <li>{t("home.progress3")}</li>
+            <li>{t("home.progress4")}</li>
+          </ul>
+        </Card>
       </div>
-
-      <InfoCard
-        title={t("home.whatIsTitle")}
-        icon={
-          <img src={compiler} alt="compiler" className={styles.inlineIcon} />
-        }
-        delay="0.2s"
-      >
-        <p>{t("home.whatIsText")}</p>
-      </InfoCard>
-
-      <InfoCard
-        title={t("home.featuresTitle")}
-        icon={<img src={brain} alt="Brain" className={styles.inlineIcon} />}
-        delay="0.6s"
-      >
-        <ul>
-          <li>{t("home.feature1")}</li>
-          <li>{t("home.feature2")}</li>
-          <li>{t("home.feature3")}</li>
-          <li>{t("home.feature4")}</li>
-        </ul>
-      </InfoCard>
-
-      <InfoCard
-        title={t("home.progressTitle")}
-        icon={<img src={star} alt="Star" className={styles.inlineIcon} />}
-        delay="0.2s"
-      >
-        <ul>
-          <li>{t("home.progress1")}</li>
-          <li>{t("home.progress2")}</li>
-          <li>{t("home.progress3")}</li>
-          <li>{t("home.progress4")}</li>
-        </ul>
-      </InfoCard>
-
-      <Footer />
     </div>
   );
 }

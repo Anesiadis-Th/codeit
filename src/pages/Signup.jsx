@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { Link } from "react-router-dom";
-import globalStyles from "../styles/globals.module.css";
-import Footer from "../components/Footer";
+import { useTranslation } from "react-i18next";
+import Card from "../components/ui/Card";
+import Field from "../components/ui/Field";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import Alert from "../components/ui/Alert";
 import googleIcon from "../assets/googleIcon.png";
 import githubIcon from "../assets/githubIcon.png";
-import { useTranslation } from "react-i18next";
 
 export default function Signup() {
   const { t } = useTranslation();
@@ -34,162 +37,93 @@ export default function Signup() {
   };
 
   return (
-    <div className={globalStyles.container} style={{ maxWidth: "400px" }}>
-      <h2 className={globalStyles.title} style={{ textAlign: "center" }}>
+    <div className="mx-auto w-full max-w-md px-4 py-10">
+      <h2 className="text-gradient animate-fade-up mb-6 text-center text-3xl font-bold">
         {t("signup.title")}
       </h2>
 
-      <div className={globalStyles.cardStatic}>
-        <form onSubmit={handleSignup}>
-          <label
-            htmlFor="email"
-            style={{ display: "block", marginBottom: "0.5rem" }}
-          >
-            {t("signup.email")}
-          </label>
-          <input
-            id="email"
-            type="email"
-            className={globalStyles.questionInput}
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <Card variant="static" animated delay={100}>
+        <form onSubmit={handleSignup} className="flex flex-col gap-4">
+          <Field label={t("signup.email")} htmlFor="email">
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Field>
 
-          <label
-            htmlFor="password"
-            style={{ display: "block", marginBottom: "0.5rem" }}
-          >
-            {t("signup.password")}
-          </label>
-          <input
-            id="password"
-            type="password"
-            className={globalStyles.questionInput}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <Field label={t("signup.password")} htmlFor="password">
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Field>
 
-          <label
-            htmlFor="confirm"
-            style={{ display: "block", marginBottom: "0.5rem" }}
-          >
-            {t("signup.confirmPassword")}
-          </label>
-          <input
-            id="confirm"
-            type="password"
-            className={globalStyles.questionInput}
-            placeholder={t("signup.confirmPlaceholder")}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <Field label={t("signup.confirmPassword")} htmlFor="confirm">
+            <Input
+              id="confirm"
+              type="password"
+              placeholder={t("signup.confirmPlaceholder")}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </Field>
 
-          <button
-            type="submit"
-            className={globalStyles.buttonPrimary}
-            style={{ marginTop: "1rem", width: "100%" }}
-          >
+          <Button type="submit" fullWidth className="mt-2">
             {t("signup.submit")}
-          </button>
+          </Button>
 
-          {error && (
-            <p
-              style={{
-                color: "#ff6666",
-                marginTop: "1rem",
-                fontWeight: "bold",
-              }}
-            >
-              ❌ {error}
-            </p>
-          )}
+          {error && <Alert variant="error">{error}</Alert>}
 
           {success && (
-            <div
-              style={{
-                backgroundColor: "#e0ffe0",
-                color: "#003300",
-                padding: "1rem",
-                borderRadius: "8px",
-                marginTop: "1rem",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              ✅ {t("signup.success")}
-              <div style={{ marginTop: "1rem", textAlign: "center" }}>
+            <Alert variant="success">
+              {t("signup.success")}
+              <div className="mt-3">
                 <Link to="/login">
-                  <button className={globalStyles.buttonPrimary}>
-                    {t("signup.goToLogin")}
-                  </button>
+                  <Button size="sm">{t("signup.goToLogin")}</Button>
                 </Link>
               </div>
-            </div>
+            </Alert>
           )}
         </form>
 
-        <div
-          style={{
-            marginTop: "1rem",
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() =>
-              supabase.auth.signInWithOAuth({ provider: "google" })
-            }
-            className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGoogle}`}
+        <div className="mt-4 flex flex-wrap justify-center gap-3">
+          <Button
+            variant="oauth-google"
+            size="sm"
+            className="min-w-35 flex-1"
+            onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
           >
-            <img
-              src={googleIcon}
-              alt="Google"
-              style={{ width: "20px", height: "20px" }}
-            />
+            <img src={googleIcon} alt="" aria-hidden="true" className="size-5" />
             Google
-          </button>
+          </Button>
 
-          <button
-            type="button"
-            onClick={() =>
-              supabase.auth.signInWithOAuth({ provider: "github" })
-            }
-            className={`${globalStyles.buttonOAuth} ${globalStyles.buttonOAuthGitHub}`}
+          <Button
+            variant="oauth-github"
+            size="sm"
+            className="min-w-35 flex-1"
+            onClick={() => supabase.auth.signInWithOAuth({ provider: "github" })}
           >
-            <img
-              src={githubIcon}
-              alt="GitHub"
-              style={{ width: "20px", height: "20px" }}
-            />
+            <img src={githubIcon} alt="" aria-hidden="true" className="size-5" />
             GitHub
-          </button>
+          </Button>
         </div>
 
-        <p
-          style={{
-            marginTop: "1.5rem",
-            textAlign: "center",
-            fontSize: "0.95rem",
-          }}
-        >
+        <p className="mt-6 text-center text-sm">
           {t("signup.haveAccount")}{" "}
-          <Link
-            to="/login"
-            style={{ color: "#97dffc", textDecoration: "underline" }}
-          >
+          <Link to="/login" className="text-accent-300 underline transition hover:brightness-110">
             {t("signup.login")}
           </Link>
         </p>
-      </div>
-      <Footer />
+      </Card>
     </div>
   );
 }

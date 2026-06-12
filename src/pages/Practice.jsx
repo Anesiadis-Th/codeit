@@ -1,16 +1,13 @@
-import globalStyles from "../styles/globals.module.css";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Code2 } from "lucide-react";
 import { submitCode } from "../lib/codeService";
 import { runCCode } from "../lib/judge0Service";
 import { supabase } from "../lib/supabaseClient";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-import "prismjs/components/prism-c";
-import "prismjs/themes/prism-tomorrow.css";
-import Footer from "../components/Footer";
-import CodeIcon from "../assets/code.png";
-import editorStyles from "../styles/editor.module.css";
-import { useTranslation } from "react-i18next";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import CodeEditor from "../components/ui/CodeEditor";
+import CodeBlock from "../components/ui/CodeBlock";
 
 export default function Practice() {
   const { t } = useTranslation();
@@ -64,64 +61,31 @@ export default function Practice() {
   };
 
   return (
-    <div className={globalStyles.container}>
-      <h1 className={globalStyles.title}>
-        <img
-          src={CodeIcon}
-          alt="Code"
-          className={globalStyles.inlineIconLarge}
-        />
-        {t("practice.title")}
+    <div className="mx-auto max-w-3xl px-4 py-8">
+      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
+        <Code2 className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
+        <span className="text-gradient">{t("practice.title")}</span>
       </h1>
 
-      <div className={`${globalStyles.card} ${globalStyles.cardAnimated}`}>
-        <Editor
-          value={code}
-          onValueChange={setCode}
-          highlight={(code) => Prism.highlight(code, Prism.languages.c, "c")}
-          padding={16}
-          className={editorStyles.editorBox}
-        />
+      <Card animated delay={100}>
+        <CodeEditor value={code} onChange={setCode} />
 
-        <button
-          className={globalStyles.buttonPrimary}
-          onClick={handleSubmit}
-          disabled={loading}
-        >
+        <Button className="mt-4" loading={loading} onClick={handleSubmit}>
           {loading ? t("practice.submitting") : t("practice.runCode")}
-        </button>
+        </Button>
 
         {output && !error && output !== "No output" && (
-          <pre
-            style={{
-              backgroundColor: "#e0ffe0",
-              color: "#003300",
-              padding: "1rem",
-              marginTop: "1rem",
-              borderRadius: "6px",
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            ✅ {t("practice.output")}: {output}
-          </pre>
+          <CodeBlock variant="output" label={t("practice.output")} className="mt-4">
+            {output}
+          </CodeBlock>
         )}
 
         {(error || output === "No output") && (
-          <pre
-            style={{
-              backgroundColor: "#ffe0e0",
-              color: "#550000",
-              padding: "1rem",
-              marginTop: "1rem",
-              borderRadius: "6px",
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            ❌ {error || t("practice.noOutput")}
-          </pre>
+          <CodeBlock variant="error" className="mt-4">
+            {error || t("practice.noOutput")}
+          </CodeBlock>
         )}
-      </div>
-      <Footer />
+      </Card>
     </div>
   );
 }

@@ -1,4 +1,23 @@
 {
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again"
+  },
+
+  "footer": {
+    "builtWith": "Built with",
+    "by": "by Theocharis Anesiadis · CodeIT © 2025"
+  },
+
+  "admin": {
+    "accessDenied": "Access denied",
+    "accessDeniedHint": "You need administrator rights to view this page.",
+    "title": "Admin Panel",
+    "existingLessons": "Existing Lessons",
+    "noLessons": "No lessons found."
+  },
+
   "header": {
     "lessons": "Lessons",
     "practice": "Practice",
@@ -22,7 +41,10 @@
     "progress1": "Earn XP, level up, and keep your streak alive",
     "progress2": "Test your code instantly with a built-in C compiler",
     "progress3": "Track your progress and unlock new lessons",
-    "progress4": "No stress — learn at your own pace, from any device"
+    "progress4": "No stress — learn at your own pace, from any device",
+    "typewriter1": "100% Free.",
+    "typewriter2": "Beginner-friendly.",
+    "typewriter3": "No installation required."
   },
   "dashboard": {
     "title": "Your Dashboard",
@@ -52,7 +74,8 @@
     "inProgress": "In Progress",
     "notStarted": "Uncompleted",
     "review": "Review Lesson",
-    "start": "Start Lesson"
+    "start": "Start Lesson",
+    "loadError": "Couldn't load the lessons."
   },
   "login": {
     "title": "Welcome Back",
@@ -112,6 +135,11 @@
     "guestMessage": "Great job finishing the lesson!\nSign up to save your progress and earn XP next time! 🔓",
     "signedInCongrats": "You've earned 10 XP and kept your streak alive! 🔥",
     "guestPrompt": "Sign up to save your progress and earn XP next time! 🔓",
-    "redirecting": "Redirecting back to lessons..."
+    "redirecting": "Redirecting back to lessons...",
+    "continue": "Continue",
+    "skip": "Skip Question",
+    "backToLessons": "Back to Lessons",
+    "goToDashboard": "Go to Dashboard",
+    "percentComplete": "{{percent}}% complete"
   }
 }

@@ -1,198 +1,172 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
-import { getUserStats } from "../lib/statsService";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { CheckCircle2, Clock, Flame, Gamepad2, Target, TrendingUp } from "lucide-react";
 import { fetchUserProgress } from "../lib/progressService";
 import { fetchAllLessons } from "../lib/lessonService";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/globals.module.css";
-import Footer from "../components/Footer";
-import Controller from "../assets/controller.png";
-import tickIcon from "../assets/tick.png";
-import clockIcon from "../assets/clock.png";
+import { computeLevel } from "../lib/levels";
+import { useAuth } from "../hooks/useAuth";
+import { useUserStats } from "../hooks/useUserStats";
+import { useLang } from "../hooks/useLang";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import Badge from "../components/ui/Badge";
+import ProgressBar from "../components/ui/ProgressBar";
+import Skeleton from "../components/ui/Skeleton";
 import cody_coding from "../assets/cody_coding.png";
-import { useTranslation } from "react-i18next";
+
+function StatRow({ icon: Icon, label, children }) {
+  return (
+    <p className="flex items-center gap-2.5">
+      <Icon className="size-4.5 shrink-0 text-accent-300" aria-hidden="true" />
+      {label}: <strong>{children}</strong>
+    </p>
+  );
+}
 
 export default function Dashboard() {
-  const { t, i18n } = useTranslation();
-  const [user, setUser] = useState(null);
-  const [stats, setStats] = useState(null);
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { stats } = useUserStats();
+  const { localize } = useLang();
+  const navigate = useNavigate();
+
   const [lessons, setLessons] = useState([]);
   const [progress, setProgress] = useState({});
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     const init = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        const [allLessons, userProgress] = await Promise.all([
+          fetchAllLessons(),
+          fetchUserProgress(),
+        ]);
 
-      if (!user) {
-        navigate("/login");
-        return;
+        if (!isMounted) return;
+
+        setLessons(
+          allLessons.map((lesson) => ({
+            ...lesson,
+            title: localize(lesson, "title"),
+          }))
+        );
+
+        const progressMap = {};
+        (userProgress || []).forEach((p) => {
+          progressMap[p.lesson_id] = p.completed;
+        });
+        setProgress(progressMap);
+      } catch (err) {
+        console.error("Error loading dashboard:", err.message);
+      } finally {
+        if (isMounted) setLoading(false);
       }
-
-      if (!isMounted) return;
-      setUser(user);
-
-      // Load data, but don't hard-block the whole page on stats
-      const [userStats, allLessonsRaw, userProgress] = await Promise.all([
-        getUserStats().catch(() => null),
-        fetchAllLessons(),
-        fetchUserProgress(),
-      ]);
-
-      const raw = (i18n.language || "en").toLowerCase();
-      const lang = raw.startsWith("gr") || raw.startsWith("el") ? "gr" : "en";
-
-      const allLessons = allLessonsRaw.map((lesson) => ({
-        ...lesson,
-        title:
-          lang === "gr"
-            ? lesson.title_gr || lesson.title_en
-            : lesson.title_en || lesson.title_gr,
-      }));
-
-      const progressMap = {};
-      (userProgress || []).forEach((p) => {
-        progressMap[p.lesson_id] = p.completed;
-      });
-
-      if (!isMounted) return;
-      setStats(userStats);
-      setLessons(allLessons);
-      setProgress(progressMap);
     };
 
     init();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_evt, session) => {
-      const u = session?.user || null;
-      if (!u) navigate("/login");
-    });
-
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
     };
-  }, [i18n.language, navigate]);
+  }, [localize]);
 
-  if (!user) {
+  if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.spinner}></div>
+      <div className="mx-auto max-w-3xl space-y-6 px-4 py-8">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-64 w-full" />
       </div>
     );
   }
 
   const completedLessons = lessons.filter((l) => progress[l.id]);
   const totalXP = stats?.xp ?? 0;
-
-  const getXPForLevel = (lvl) => 20 + (lvl - 1) * 30;
-
-  let level = 1;
-  let remainingXP = totalXP;
-  let xpNeeded = getXPForLevel(level);
-
-  while (remainingXP >= xpNeeded) {
-    remainingXP -= xpNeeded;
-    level += 1;
-    xpNeeded = getXPForLevel(level);
-  }
-
-  const xpToNext = xpNeeded - remainingXP;
-  const percentToNextLevel = ((xpNeeded - xpToNext) / xpNeeded) * 100;
+  const { level, xpToNext, percentToNextLevel } = computeLevel(totalXP);
+  const completedPercent = lessons.length
+    ? Math.round((completedLessons.length / lessons.length) * 100)
+    : 0;
   const nextLesson = lessons.find((l) => !progress[l.id]);
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>
-        <img
-          src={Controller}
-          alt="Controller"
-          className={styles.inlineIconLarge}
-        />
-        {t("dashboard.title")}
+    <div className="mx-auto max-w-3xl px-4 py-8">
+      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
+        <Gamepad2 className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
+        <span className="text-gradient">{t("dashboard.title")}</span>
       </h1>
 
-      <div
-        className={`${styles.card} ${styles.cardAnimated}`}
-        style={{ position: "relative", overflow: "hidden" }}
-      >
-        {/* Faded mascot */}
-        <img src={cody_coding} alt="Mascot" className={styles.cardMascot} />
+      <div className="space-y-6">
+        <Card animated mascot={cody_coding}>
+          <div className="relative z-10 space-y-2.5 leading-relaxed">
+            <p>
+              {t("dashboard.welcome")}, <strong>{user?.email}</strong>
+            </p>
+            <StatRow icon={Flame} label={t("dashboard.streak")}>
+              {stats ? stats.streak : "—"}
+            </StatRow>
+            <StatRow icon={Target} label={t("dashboard.level")}>
+              {level}
+            </StatRow>
+            <StatRow icon={TrendingUp} label={t("dashboard.xp")}>
+              {totalXP}
+            </StatRow>
+            <p className="text-sm text-fg-muted">
+              {t("dashboard.xpToNext", { xp: xpToNext })}
+            </p>
+            <ProgressBar
+              value={percentToNextLevel}
+              label={t("dashboard.xp")}
+              className="mt-3"
+            />
+          </div>
+        </Card>
 
-        <p>
-          👋 {t("dashboard.welcome")}, <strong>{user.email}</strong>
-        </p>
-        <p>
-          🔥 Streak: <strong>{stats ? stats.streak : "…"}</strong>
-        </p>
-        <p>
-          🎯 {t("dashboard.level")}: <strong>{level}</strong>
-        </p>
-        <p>
-          📈 {t("dashboard.xp")}: <strong>{totalXP}</strong> (
-          {t("dashboard.xpToNext", { xp: xpToNext })})
-        </p>
-
-        <div className={styles.progressBar}>
-          <div
-            className={`${styles.progress} ${styles.progressDynamic}`}
-            style={{ width: `${percentToNextLevel}%` }}
-          />
-        </div>
-      </div>
-
-      <div className={`${styles.card} ${styles.cardAnimated}`}>
-        <h2>{t("dashboard.yourLessons")}</h2>
-        <ul className={styles.lessonList}>
-          {lessons.map((lesson) => (
-            <li key={lesson.id} className={styles.lessonItem}>
-              <span>{lesson.title}</span>
-              <span>
+        <Card animated delay={150}>
+          <h2 className="mb-4 text-xl font-semibold text-white">
+            {t("dashboard.yourLessons")}
+          </h2>
+          <ul className="space-y-2">
+            {lessons.map((lesson) => (
+              <li
+                key={lesson.id}
+                className="flex items-center justify-between gap-3 rounded-xl bg-surface-800 px-4 py-3 transition hover:bg-surface-700"
+              >
+                <span className="font-medium">{lesson.title}</span>
                 {progress[lesson.id] ? (
-                  <img
-                    src={tickIcon}
-                    alt="Completed"
-                    className={styles.statusIcon}
-                  />
+                  <Badge variant="success" icon={CheckCircle2}>
+                    {t("lessons.completed")}
+                  </Badge>
                 ) : (
-                  <img
-                    src={clockIcon}
-                    alt="Completed"
-                    className={styles.statusIcon}
-                  />
+                  <Badge variant="muted" icon={Clock}>
+                    {t("lessons.notStarted")}
+                  </Badge>
                 )}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p>
-          ✅ {completedLessons.length}/{lessons.length}{" "}
-          {t("dashboard.completed")} (
-          {Math.round((completedLessons.length / lessons.length) * 100)}%)
-        </p>
-      </div>
-
-      {nextLesson && (
-        <div className={`${styles.card} ${styles.cardAnimated}`}>
-          <h2>▶️ {t("dashboard.continueLearning")}</h2>
-          <p>
-            {t("dashboard.nextUp")}: <strong>{nextLesson.title}</strong>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-sm text-fg-muted">
+            {completedLessons.length}/{lessons.length} {t("dashboard.completed")} (
+            {completedPercent}%)
           </p>
-          <button
-            className={styles.buttonPrimary}
-            onClick={() => navigate(`/lessons/${nextLesson.id}`)}
-          >
-            {t("dashboard.goToLesson")}
-          </button>
-        </div>
-      )}
-      <Footer />
+        </Card>
+
+        {nextLesson && (
+          <Card animated delay={300}>
+            <h2 className="mb-2 text-xl font-semibold text-white">
+              {t("dashboard.continueLearning")}
+            </h2>
+            <p className="mb-4 leading-relaxed">
+              {t("dashboard.nextUp")}: <strong>{nextLesson.title}</strong>
+            </p>
+            <Button onClick={() => navigate(`/lessons/${nextLesson.id}`)}>
+              {t("dashboard.goToLesson")}
+            </Button>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,57 +1,61 @@
-// src/components/Footer.jsx
-import styles from "../styles/footer.module.css";
-import github from "../assets/github.png";
-import linkedin from "../assets/linkedin.png";
 import { useTranslation } from "react-i18next";
-import enIcon from "../assets/enIcon.png";
-import grIcon from "../assets/grIcon.png";
+import { Github, Heart, Linkedin } from "lucide-react";
+import { useLang } from "../hooks/useLang";
 
 export default function Footer() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { lang } = useLang();
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem("language", lng);
-  };
+  const langButtonClasses = (active) =>
+    `cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition ${
+      active ? "bg-brand-500 text-white" : "text-fg-muted hover:text-fg"
+    }`;
+
   return (
-    <footer className={styles.footer}>
-      <p>Built with 💜 by Theocharis Anesiadis · CodeIT © 2025</p>
+    <footer className="mt-16 border-t border-white/10 px-4 py-8 text-center text-sm text-fg-muted">
+      <p className="flex flex-wrap items-center justify-center gap-1.5">
+        {t("footer.builtWith")}
+        <Heart className="size-4 text-streak" fill="currentColor" aria-hidden="true" />
+        {t("footer.by")}
+      </p>
 
-      <div className={styles.socialLinks}>
+      <div className="mt-4 flex items-center justify-center gap-6">
         <a
           href="https://github.com/Anesiadis-Th"
           target="_blank"
           rel="noreferrer"
+          className="inline-flex items-center gap-1.5 transition hover:text-accent-300"
         >
-          <img src={github} alt="GitHub" aria-hidden="true" />
+          <Github className="size-4" aria-hidden="true" />
           GitHub
         </a>
-
         <a
           href="https://www.linkedin.com/in/anesiadis-theocharis/"
           target="_blank"
           rel="noreferrer"
+          className="inline-flex items-center gap-1.5 transition hover:text-accent-300"
         >
-          <img src={linkedin} alt="LinkedIn" aria-hidden="true" />
+          <Linkedin className="size-4" aria-hidden="true" />
           LinkedIn
         </a>
       </div>
 
-      <div className={styles.languageSwitcher}>
+      <div className="mt-4 inline-flex items-center gap-1 rounded-full bg-white/5 p-1">
         <button
           type="button"
-          onClick={() => changeLanguage("en")}
+          onClick={() => i18n.changeLanguage("en")}
           aria-label="Switch to English"
+          className={langButtonClasses(lang === "en")}
         >
-          <img src={enIcon} alt="English" />
+          EN
         </button>
-
         <button
           type="button"
-          onClick={() => changeLanguage("gr")}
+          onClick={() => i18n.changeLanguage("gr")}
           aria-label="Switch to Greek"
+          className={langButtonClasses(lang === "gr")}
         >
-          <img src={grIcon} alt="Greek" />
+          ΕΛ
         </button>
       </div>
     </footer>
