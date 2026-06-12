@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Github, Heart, Linkedin } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useLang } from "../hooks/useLang";
+import githubIcon from "../assets/github.png";
+import linkedinIcon from "../assets/linkedin.png";
 
 export default function Footer() {
   const { t, i18n } = useTranslation();
@@ -26,7 +28,7 @@ export default function Footer() {
           rel="noreferrer"
           className="inline-flex items-center gap-1.5 transition hover:text-accent-300"
         >
-          <Github className="size-4" aria-hidden="true" />
+          <img src={githubIcon} alt="" aria-hidden="true" className="size-4" />
           GitHub
         </a>
         <a
@@ -35,7 +37,7 @@ export default function Footer() {
           rel="noreferrer"
           className="inline-flex items-center gap-1.5 transition hover:text-accent-300"
         >
-          <Linkedin className="size-4" aria-hidden="true" />
+          <img src={linkedinIcon} alt="" aria-hidden="true" className="size-4" />
           LinkedIn
         </a>
       </div>

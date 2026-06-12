@@ -15,7 +15,17 @@
     "accessDeniedHint": "You need administrator rights to view this page.",
     "title": "Admin Panel",
     "existingLessons": "Existing Lessons",
-    "noLessons": "No lessons found."
+    "noLessons": "No lessons found.",
+    "createLesson": "Create a Lesson",
+    "lessonInfo": "Lesson Info",
+    "addStep": "Add Step",
+    "steps": "Steps",
+    "noSteps": "No steps yet — add the first one above.",
+    "removeStep": "Remove",
+    "rawJson": "Raw JSON",
+    "saveLesson": "Save Lesson",
+    "saveSuccess": "Lesson saved successfully!",
+    "saveError": "Failed to save lesson: {{message}}"
   },
 
   "header": {
@@ -140,6 +150,7 @@
     "skip": "Skip Question",
     "backToLessons": "Back to Lessons",
     "goToDashboard": "Go to Dashboard",
-    "percentComplete": "{{percent}}% complete"
+    "percentComplete": "{{percent}}% complete",
+    "typeAnswer": "Type your answer"
   }
 }

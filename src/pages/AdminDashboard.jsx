@@ -1,94 +1,81 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
-import globalStyles from "../styles/globals.module.css";
-import AdminLessonEditor from "./AdminLessonEditor";
 import { useTranslation } from "react-i18next";
+import { ShieldCheck } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { useLang } from "../hooks/useLang";
+import Card from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import AdminLessonEditor from "./AdminLessonEditor";
 
 export default function AdminDashboard() {
-  const { i18n } = useTranslation();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
+  const { localize } = useLang();
   const [lessons, setLessons] = useState([]);
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    let isMounted = true;
 
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
+    const fetchLessons = async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", user.id)
-        .single();
+        .from("lessons")
+        .select("id, section_id, title_en, title_gr")
+        .order("order", { ascending: true });
 
       if (error) {
-        console.error("Error fetching admin status:", error.message);
-        setLoading(false);
+        console.error("Error fetching lessons:", error.message);
         return;
       }
+      if (!isMounted) return;
 
-      setIsAdmin(data?.is_admin === true);
-      setLoading(false);
+      setLessons(
+        (data || []).map((lesson) => ({
+          id: lesson.id,
+          section_id: lesson.section_id,
+          title: localize(lesson, "title"),
+        }))
+      );
     };
 
-    checkAdmin();
-  }, []);
+    fetchLessons();
 
-  useEffect(() => {
-    if (isAdmin) fetchLessons();
-  }, [isAdmin, i18n.language]);
-
-  const fetchLessons = async () => {
-    const { data, error } = await supabase
-      .from("lessons")
-      .select("id, section_id, title_en, title_gr")
-      .order("order", { ascending: true });
-
-    if (error) {
-      console.error("Error fetching lessons:", error.message);
-      return;
-    }
-    const lang =
-      (i18n.language || "en").toLowerCase().startsWith("gr") ||
-      (i18n.language || "en").toLowerCase().startsWith("el")
-        ? "gr"
-        : "en";
-    const withDisplay = (data || []).map((l) => ({
-      id: l.id,
-      section_id: l.section_id,
-      title:
-        lang === "gr" ? l.title_gr || l.title_en : l.title_en || l.title_gr,
-    }));
-    setLessons(withDisplay);
-  };
-
-  if (loading) return <p>Checking permissions...</p>;
-  if (!isAdmin) return <p>⛔ Access denied.</p>;
+    return () => {
+      isMounted = false;
+    };
+  }, [localize]);
 
   return (
-    <div className={globalStyles.container}>
-      <h2 className={globalStyles.title}>Admin Panel</h2>
+    <div className="mx-auto max-w-3xl px-4 py-8">
+      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
+        <ShieldCheck className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
+        <span className="text-gradient">{t("admin.title")}</span>
+      </h1>
 
-      <h3>Existing Lessons</h3>
-      {lessons.length === 0 ? (
-        <p>No lessons found.</p>
-      ) : (
-        <ul>
-          {lessons.map((lesson) => (
-            <li key={lesson.id}>
-              <strong>{lesson.title}</strong> <small>({lesson.id})</small>
-            </li>
-          ))}
-        </ul>
-      )}
+      <Card variant="static" className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold text-white">
+          {t("admin.existingLessons")}
+        </h2>
 
-      <hr />
+        {lessons.length === 0 ? (
+          <p className="text-sm text-fg-muted">{t("admin.noLessons")}</p>
+        ) : (
+          <ul className="space-y-2">
+            {lessons.map((lesson) => (
+              <li
+                key={lesson.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-ink-900 px-4 py-3"
+              >
+                <div>
+                  <span className="font-medium">{lesson.title}</span>{" "}
+                  <span className="text-xs text-fg-muted">({lesson.id})</span>
+                </div>
+                {lesson.section_id && (
+                  <Badge variant="muted">{lesson.section_id}</Badge>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
 
       <AdminLessonEditor />
     </div>

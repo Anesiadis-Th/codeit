@@ -1,31 +1,28 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchLessonById } from "../lib/lessonService";
 import { completeLesson } from "../lib/progressService";
 import { awardXP } from "../lib/statsService";
 import { runCCode } from "../lib/judge0Service";
-import { supabase } from "../lib/supabaseClient";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-import "prismjs/components/prism-c";
-import "prismjs/themes/prism-tomorrow.css";
-import globalStyles from "../styles/globals.module.css";
-import Footer from "../components/Footer";
-import tick from "../assets/tick.png";
-import xIcon from "../assets/x.png";
-import lightbulb from "../assets/lightbulb.png";
-import codyCelebrate from "../assets/cody_celebrate.png";
-import Confetti from "react-confetti";
-import { useWindowSize } from "@react-hook/window-size";
-import editorStyles from "../styles/editor.module.css";
-import { useTranslation } from "react-i18next";
+import { useAuth } from "../hooks/useAuth";
+import { useLang } from "../hooks/useLang";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import Alert from "../components/ui/Alert";
+import Spinner from "../components/ui/Spinner";
+import LessonProgress from "../components/lesson/LessonProgress";
+import HintBox from "../components/lesson/HintBox";
+import QuestionMultipleChoice from "../components/lesson/QuestionMultipleChoice";
+import QuestionFillBlank from "../components/lesson/QuestionFillBlank";
+import QuestionCode from "../components/lesson/QuestionCode";
+import LessonComplete from "../components/lesson/LessonComplete";
 
 export default function LessonScreen() {
   const { t } = useTranslation();
-  const { i18n } = useTranslation();
-
   const { lessonId } = useParams();
-  const navigate = useNavigate();
+  const { isGuest } = useAuth();
+  const { localize } = useLang();
 
   const [lesson, setLesson] = useState(null);
   const [steps, setSteps] = useState([]);
@@ -33,6 +30,7 @@ export default function LessonScreen() {
   const [selected, setSelected] = useState(null);
   const [inputAnswer, setInputAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(null);
+  const [answeredCorrectly, setAnsweredCorrectly] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [hasSkipped, setHasSkipped] = useState(false);
 
@@ -43,45 +41,20 @@ export default function LessonScreen() {
 
   const [showHint, setShowHint] = useState(false);
 
-  const [width, height] = useWindowSize();
-
-  const normLang = useCallback(() => {
-    const raw = (i18n.language || "en").toLowerCase();
-    if (raw.startsWith("gr") || raw.startsWith("el")) return "gr";
-    return "en";
-  }, [i18n.language]);
-
   useEffect(() => {
+    let isMounted = true;
+
     const init = async () => {
       const base = await fetchLessonById(lessonId);
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const isGuest = !user || user.app_metadata?.provider === "anonymous";
-
-      const lang = normLang();
+      if (!isMounted) return;
 
       const localized = {
         id: base.id,
         section_id: base.section_id,
-        title:
-          lang === "gr"
-            ? base.title_gr || base.title_en
-            : base.title_en || base.title_gr,
-        intro:
-          lang === "gr"
-            ? base.intro_gr || base.intro_en
-            : base.intro_en || base.intro_gr,
-        content:
-          lang === "gr"
-            ? base.content_gr || base.content_en
-            : base.content_en || base.content_gr,
-        steps:
-          lang === "gr"
-            ? base.steps_gr || base.steps_en
-            : base.steps_en || base.steps_gr,
-        isGuest,
+        title: localize(base, "title"),
+        intro: localize(base, "intro"),
+        content: localize(base, "content"),
+        steps: localize(base, "steps"),
       };
 
       const normalizedSteps = (localized.steps || []).map((s) =>
@@ -96,7 +69,11 @@ export default function LessonScreen() {
     };
 
     init();
-  }, [lessonId, normLang]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [lessonId, localize]);
 
   useEffect(() => {
     setShowHint(false);
@@ -105,6 +82,7 @@ export default function LessonScreen() {
     setIsCorrect(null);
   }, [questionIndex]);
 
+  // Wrong-answer feedback fades out on its own (not navigation, just decay)
   useEffect(() => {
     if (
       isCorrect === false &&
@@ -119,15 +97,11 @@ export default function LessonScreen() {
   }, [isCorrect, steps, questionIndex]);
 
   if (!lesson || !Array.isArray(steps) || steps.length === 0) {
-    return (
-      <div className={globalStyles.loaderWrapper}>
-        <div className={globalStyles.loader}></div>
-      </div>
-    );
+    return <Spinner className="mx-auto my-16" />;
   }
 
   const currentStep = steps[questionIndex];
-  const progress = ((questionIndex + 1) / steps.length) * 100;
+  const isLastStep = questionIndex === steps.length - 1;
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -145,14 +119,28 @@ export default function LessonScreen() {
       if (result.stderr) {
         setCodeError(result.stderr);
       } else {
-        const correct = actual === expected;
-        setIsCorrect(correct);
+        setIsCorrect(actual === expected);
       }
     } catch (err) {
       setCodeError("Execution error: " + err.message);
     } finally {
       setIsRunning(false);
     }
+  };
+
+  const advanceToNext = () => {
+    setSelected(null);
+    setInputAnswer("");
+    setIsCorrect(null);
+    setAnsweredCorrectly(false);
+    setShowHint(false);
+    setQuestionIndex((prev) => {
+      const nextIndex = prev + 1;
+      if (steps[nextIndex]?.type === "code") {
+        setCode(steps[nextIndex].starterCode);
+      }
+      return nextIndex;
+    });
   };
 
   const handleSubmit = async () => {
@@ -168,307 +156,154 @@ export default function LessonScreen() {
         inputAnswer.trim().toLowerCase() ===
         currentStep.answer.trim().toLowerCase();
     } else if (currentStep.type === "code") {
-      const actual = codeOutput.trim();
-      const expected = currentStep.expectedOutput.trim();
-      correct = actual === expected;
+      correct = codeOutput.trim() === currentStep.expectedOutput.trim();
     }
 
     setIsCorrect(correct);
 
-    if (correct) {
-      if (questionIndex === steps.length - 1) {
-        setCompleted(true);
-        await completeLesson(lesson.id);
+    if (!correct) return;
 
-        if (!hasSkipped) {
-          await awardXP(10);
-        }
-
-        setTimeout(() => navigate("/lessons"), 8000);
-
-        await completeLesson(lesson.id);
+    if (isLastStep) {
+      setCompleted(true);
+      await completeLesson(lesson.id);
+      if (!hasSkipped) {
         await awardXP(10);
-      } else {
-        setTimeout(() => {
-          setSelected(null);
-          setInputAnswer("");
-          setIsCorrect(null);
-          setShowHint(false);
-          setQuestionIndex((prev) => {
-            const nextIndex = prev + 1;
-            if (steps[nextIndex]?.type === "code") {
-              setCode(steps[nextIndex].starterCode);
-            }
-            return nextIndex;
-          });
-        }, 1000);
       }
+    } else {
+      setAnsweredCorrectly(true);
     }
   };
 
   const handleSkip = () => {
     setHasSkipped(true);
 
-    if (questionIndex === steps.length - 1) {
+    if (isLastStep) {
       setCompleted(true);
-      setTimeout(() => navigate("/lessons"), 5000);
     } else {
-      setSelected(null);
-      setInputAnswer("");
-      setIsCorrect(null);
-      setShowHint(false);
-      setQuestionIndex((prev) => {
-        const nextIndex = prev + 1;
-        if (steps[nextIndex]?.type === "code") {
-          setCode(steps[nextIndex].starterCode);
-        }
-        return nextIndex;
-      });
+      advanceToNext();
     }
   };
 
+  const submitDisabled =
+    (currentStep.type === "multiple-choice" && selected === null) ||
+    ((currentStep.type === "short-answer" ||
+      currentStep.type === "fill-in-the-blank") &&
+      inputAnswer.trim() === "") ||
+    (currentStep.type === "code" && (isRunning || !codeOutput));
+
   return (
-    <div className={globalStyles.container}>
-      <h2 className={globalStyles.title}>{lesson.title}</h2>
+    <div className="mx-auto max-w-3xl px-4 py-8">
+      <h2 className="text-gradient animate-fade-up my-6 text-3xl font-bold">
+        {lesson.title}
+      </h2>
 
-      {completed && (
-        <Confetti width={width} height={height} numberOfPieces={300} />
-      )}
-
-      {lesson.intro && questionIndex === 0 && (
-        <div className={globalStyles.introCard}>
-          <p>{lesson.intro}</p>
-        </div>
-      )}
-
-      {!completed && (
-        <div className={globalStyles.cardStatic}>
-          {lesson.content.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
-      )}
-
-      {!completed && (
-        <div
-          className={`${globalStyles.cardStatic} ${
-            isCorrect === false ? globalStyles.shake : ""
-          } ${isCorrect === true ? globalStyles.pulseSuccess : ""}`}
-        >
-          <div className={globalStyles.progressWrapper}>
-            <p className={globalStyles.progressText}>
-              {progress.toFixed(0)}% complete
-            </p>
-            <div className={globalStyles.progressBar}>
-              <div
-                className={globalStyles.progress}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-
-          <h3>
-            {t("lesson.question", {
-              current: questionIndex + 1,
-              total: steps.length,
-            })}
-          </h3>
-
-          {currentStep.type !== "code" && <p>{currentStep.question}</p>}
-          {currentStep.type === "code" && currentStep.description && (
-            <p className="descriptionText">{currentStep.description}</p>
+      {completed ? (
+        <LessonComplete isGuest={isGuest} hasSkipped={hasSkipped} />
+      ) : (
+        <div className="space-y-6">
+          {lesson.intro && questionIndex === 0 && (
+            <Card variant="intro">
+              <p>{lesson.intro}</p>
+            </Card>
           )}
 
-          {currentStep.help && (
-            <div style={{ marginTop: "0.5rem" }}>
-              <button
-                className={globalStyles.hintButton}
-                onClick={() => setShowHint((prev) => !prev)}
-              >
-                {showHint ? t("lesson.hideHint") : t("lesson.needHelp")}
-              </button>
-              <div
-                className={`${globalStyles.hintBox} ${
-                  showHint ? globalStyles.hintBoxVisible : ""
-                }`}
-              >
-                <img
-                  src={lightbulb}
-                  alt="Hint"
-                  className={globalStyles.inlineHintIcon}
-                />
+          <Card variant="static" className="space-y-3 leading-relaxed">
+            {(lesson.content || []).map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </Card>
 
-                {currentStep.help}
-              </div>
-            </div>
-          )}
-
-          <form className={globalStyles.radioForm}>
-            {currentStep.type === "multiple-choice" &&
-              Array.isArray(currentStep.options) &&
-              currentStep.options.map((opt, idx) => (
-                <label
-                  key={idx}
-                  className={`${globalStyles.radioLabel} ${
-                    selected === idx ? globalStyles.radioLabelChecked : ""
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="quiz"
-                    value={idx}
-                    className={globalStyles.radioInput}
-                    checked={selected === idx}
-                    onChange={() => setSelected(idx)}
-                  />
-                  <span className={globalStyles.optionText}>{opt}</span>
-                </label>
-              ))}
-          </form>
-
-          {(currentStep.type === "short-answer" ||
-            currentStep.type === "fill-in-the-blank") && (
-            <input
-              type="text"
-              className={globalStyles.questionInput}
-              value={inputAnswer}
-              onChange={(e) => setInputAnswer(e.target.value)}
-              placeholder="Type your answer"
-            />
-          )}
-
-          {currentStep.type === "code" && (
-            <>
-              <p style={{ fontWeight: "bold" }}>{t("lesson.expectedOutput")}</p>
-              <pre className={globalStyles.expectedOutput}>
-                {currentStep.expectedOutput}
-              </pre>
-
-              <Editor
-                value={code}
-                onValueChange={setCode}
-                highlight={(code) =>
-                  Prism.highlight(code, Prism.languages.c, "c")
-                }
-                padding={16}
-                className={editorStyles.editorBox}
-              />
-
-              <button
-                className={globalStyles.buttonRun}
-                onClick={handleRunCode}
-                disabled={isRunning}
-              >
-                {isRunning ? t("lesson.running") : t("lesson.runCode")}
-              </button>
-
-              {codeOutput && (
-                <pre className={globalStyles.codeOutput}>
-                  {t("lesson.output")}: {codeOutput}
-                </pre>
-              )}
-
-              {codeError && (
-                <pre className={globalStyles.codeError}>
-                  <img
-                    src={xIcon}
-                    alt="Error"
-                    className={globalStyles.statusIcon}
-                  />
-                  {codeError}
-                </pre>
-              )}
-
-              {isCorrect === true && (
-                <p className={editorStyles.successMessage}>
-                  <img
-                    src={tick}
-                    alt="Correct"
-                    className={globalStyles.statusIcon}
-                  />
-                  {t("lesson.codeOutputCorrect")}
-                </p>
-              )}
-
-              {isCorrect === false && (
-                <p className={editorStyles.errorMessage}>
-                  <img
-                    src={xIcon}
-                    alt="Wrong"
-                    className={globalStyles.statusIcon}
-                  />
-                  {t("lesson.codeOutputIncorrect")}
-                </p>
-              )}
-            </>
-          )}
-
-          <button
-            className={globalStyles.buttonPrimary}
-            onClick={handleSubmit}
-            disabled={
-              (currentStep.type === "multiple-choice" && selected === null) ||
-              ((currentStep.type === "short-answer" ||
-                currentStep.type === "fill-in-the-blank") &&
-                inputAnswer.trim() === "") ||
-              (currentStep.type === "code" && (isRunning || !codeOutput))
+          <Card
+            variant="static"
+            className={
+              isCorrect === false
+                ? "animate-shake"
+                : answeredCorrectly
+                  ? "animate-pulse-success"
+                  : ""
             }
           >
-            {t("lesson.submit")}
-          </button>
+            <LessonProgress current={questionIndex + 1} total={steps.length} />
 
-          <button
-            type="button"
-            className={globalStyles.buttonSecondary}
-            onClick={handleSkip}
-          >
-            {"Skip Question"}
-          </button>
+            <h3 className="text-lg font-semibold text-white">
+              {t("lesson.question", {
+                current: questionIndex + 1,
+                total: steps.length,
+              })}
+            </h3>
 
-          {isCorrect !== null && currentStep.type !== "code" && (
-            <p
-              className={
-                isCorrect
-                  ? editorStyles.successMessage
-                  : editorStyles.errorMessage
-              }
-            >
-              <img
-                src={isCorrect ? tick : xIcon}
-                alt={isCorrect ? "Correct" : "Wrong"}
-                className={globalStyles.statusIcon}
-              />
-              {t(isCorrect ? "lesson.answerCorrect" : "lesson.answerWrong")}
-            </p>
-          )}
-        </div>
-      )}
-
-      {completed && (
-        <div
-          className={`${globalStyles.cardStatic} ${globalStyles.cardCelebrateWrapper}`}
-        >
-          <div className={globalStyles.cardCelebrateText}>
-            <h3>🎉 {t("lesson.completed")}</h3>
-            {lesson.isGuest ? (
-              <p>{t("lesson.guestMessage")}</p>
-            ) : hasSkipped ? (
-              <p>{t("lesson.skippedNoXP")}</p>
-            ) : (
-              <p>{t("lesson.signedInCongrats")}</p>
+            {currentStep.type !== "code" && (
+              <p className="mt-2 leading-relaxed">{currentStep.question}</p>
             )}
-            <p>{t("lesson.redirecting")}</p>
-          </div>
+            {currentStep.type === "code" && currentStep.description && (
+              <p className="mt-2 leading-relaxed whitespace-pre-line">
+                {currentStep.description}
+              </p>
+            )}
 
-          <img
-            src={codyCelebrate}
-            alt="Celebrating Robot"
-            className={globalStyles.cardCelebrateImage}
-          />
+            {currentStep.help && (
+              <HintBox
+                hint={currentStep.help}
+                show={showHint}
+                onToggle={() => setShowHint((prev) => !prev)}
+              />
+            )}
+
+            {currentStep.type === "multiple-choice" &&
+              Array.isArray(currentStep.options) && (
+                <QuestionMultipleChoice
+                  options={currentStep.options}
+                  selected={selected}
+                  onSelect={setSelected}
+                />
+              )}
+
+            {(currentStep.type === "short-answer" ||
+              currentStep.type === "fill-in-the-blank") && (
+              <QuestionFillBlank value={inputAnswer} onChange={setInputAnswer} />
+            )}
+
+            {currentStep.type === "code" && (
+              <QuestionCode
+                step={currentStep}
+                code={code}
+                onCodeChange={setCode}
+                onRun={handleRunCode}
+                isRunning={isRunning}
+                output={codeOutput}
+                error={codeError}
+                isCorrect={isCorrect}
+              />
+            )}
+
+            {answeredCorrectly ? (
+              <div className="mt-5 space-y-4">
+                {currentStep.type !== "code" && (
+                  <Alert variant="success">{t("lesson.answerCorrect")}</Alert>
+                )}
+                <Button onClick={advanceToNext}>{t("lesson.continue")}</Button>
+              </div>
+            ) : (
+              <>
+                {isCorrect === false && currentStep.type !== "code" && (
+                  <Alert variant="error" className="mt-4">
+                    {t("lesson.answerWrong")}
+                  </Alert>
+                )}
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Button onClick={handleSubmit} disabled={submitDisabled}>
+                    {t("lesson.submit")}
+                  </Button>
+                  <Button variant="secondary" onClick={handleSkip}>
+                    {t("lesson.skip")}
+                  </Button>
+                </div>
+              </>
+            )}
+          </Card>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }
