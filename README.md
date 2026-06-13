@@ -4,15 +4,15 @@ A web application for learning the C programming language through structured les
 
 Live: [code-it.gr](https://code-it.gr)
 
-<!-- Add a screenshot here, e.g. ![Home](docs/home.png) -->
+![Home](Home.png)
 
-## Overview
+## 📖 Overview
 
 CodeIT delivers C lessons as short, sequential steps. Each step is one of three exercise types: multiple choice, fill in the blank, or a code task whose output is compiled and compared to an expected result. Progress, experience points, levels, and daily streaks are stored per user. Content is available in English and Greek, and lessons can be authored through a built-in admin editor.
 
 The frontend is a single-page React application. Authentication, the database, and authorization are handled by Supabase; C code is compiled and executed by the Judge0 API.
 
-## Features
+## ✨ Features
 
 - Lessons grouped into sections (control flow, loops, functions, arrays, pointers, and more)
 - Three exercise types: multiple choice, fill in the blank, and code tasks executed against expected output
@@ -23,19 +23,19 @@ The frontend is a single-page React application. Authentication, the database, a
 - Admin lesson editor for creating lessons and exercises
 - Responsive interface built with a small reusable component library
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-| Area | Technology |
-| --- | --- |
-| Frontend | React 19, React Router 7, Vite 6 |
-| Styling | Tailwind CSS 4 |
+| Area                    | Technology                                      |
+| ----------------------- | ----------------------------------------------- |
+| Frontend                | React 19, React Router 7, Vite 6                |
+| Styling                 | Tailwind CSS 4                                  |
 | Backend, auth, database | Supabase (PostgreSQL, Auth, Row Level Security) |
-| Code execution | Judge0 REST API (via RapidAPI) |
-| Internationalization | react-i18next |
-| Editor and highlighting | react-simple-code-editor, Prism |
-| Icons | lucide-react |
+| Code execution          | Judge0 REST API (via RapidAPI)                  |
+| Internationalization    | react-i18next                                   |
+| Editor and highlighting | react-simple-code-editor, Prism                 |
+| Icons                   | lucide-react                                    |
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
@@ -58,7 +58,7 @@ src/
 
 Data access is isolated in `src/lib`: each service module wraps a single concern (lessons, progress, statistics, code submission, and the Judge0 client). Shared state and logic live in `src/context` and `src/hooks`. The Supabase schema includes `lessons`, `progress`, `user_stats`, `submissions`, and `profiles` tables, with Row Level Security enforcing per-user access.
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -94,20 +94,20 @@ npm run dev
 
 The application is served at `http://localhost:5173` by default.
 
-## Available Scripts
+## 📜 Available Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Build the production bundle to `dist/` |
-| `npm run preview` | Serve the production build locally |
-| `npm run lint` | Run ESLint |
+| Command           | Description                            |
+| ----------------- | -------------------------------------- |
+| `npm run dev`     | Start the development server           |
+| `npm run build`   | Build the production bundle to `dist/` |
+| `npm run preview` | Serve the production build locally     |
+| `npm run lint`    | Run ESLint                             |
 
-## Deployment
+## ☁️ Deployment
 
 The application is a static single-page app and can be deployed to any static host. It is currently deployed on Netlify, with `public/_redirects` routing all paths to `index.html` for client-side routing. Set the three environment variables above in the hosting provider's configuration before building.
 
-## Author
+## 👤 Author
 
 Theocharis Anesiadis
 [GitHub](https://github.com/Anesiadis-Th) · [LinkedIn](https://www.linkedin.com/in/anesiadis-theocharis/)
