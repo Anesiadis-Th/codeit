@@ -14,10 +14,14 @@ export default function Footer() {
     }`;
 
   return (
-    <footer className="mt-16 border-t border-white/10 px-4 py-8 text-center text-sm text-fg-muted">
+    <footer className="mt-2 border-t border-white/10 px-4 py-8 text-center text-sm text-fg-muted">
       <p className="flex flex-wrap items-center justify-center gap-1.5">
         {t("footer.builtWith")}
-        <Heart className="size-4 text-streak" fill="currentColor" aria-hidden="true" />
+        <Heart
+          className="size-4 text-streak"
+          fill="currentColor"
+          aria-hidden="true"
+        />
         {t("footer.by")}
       </p>
 
@@ -37,7 +41,12 @@ export default function Footer() {
           rel="noreferrer"
           className="inline-flex items-center gap-1.5 transition hover:text-accent-300"
         >
-          <img src={linkedinIcon} alt="" aria-hidden="true" className="size-4" />
+          <img
+            src={linkedinIcon}
+            alt=""
+            aria-hidden="true"
+            className="size-4"
+          />
           LinkedIn
         </a>
       </div>

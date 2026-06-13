@@ -62,7 +62,14 @@ function CodeWindow() {
   );
 }
 
-function Tile({ icon: Icon, title, text, className = "", delay = 0, children }) {
+function Tile({
+  icon: Icon,
+  title,
+  text,
+  className = "",
+  delay = 0,
+  children,
+}) {
   return (
     <div
       className={`animate-fade-up group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface-900 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-brand-500/40 hover:shadow-lg hover:shadow-brand-500/10 ${className}`}
@@ -132,7 +139,11 @@ export default function Home() {
             <Button icon={Rocket} onClick={() => navigate("/lessons")}>
               {t("home.ctaPrimary")}
             </Button>
-            <Button variant="secondary" icon={Terminal} onClick={() => navigate("/practice")}>
+            <Button
+              variant="secondary"
+              icon={Terminal}
+              onClick={() => navigate("/practice")}
+            >
               {t("home.ctaSecondary")}
             </Button>
           </div>
@@ -155,7 +166,9 @@ export default function Home() {
           <div className="mt-auto w-full rounded-lg border border-white/10 bg-black/30 p-3 font-mono text-xs leading-relaxed">
             <div className="text-fg-muted">$ gcc main.c &amp;&amp; ./a.out</div>
             <div className="text-success-300">Sum = 42</div>
-            <div className="mt-1 text-fg-muted">$ echo &quot;exit: $?&quot;</div>
+            <div className="mt-1 text-fg-muted">
+              $ echo &quot;exit: $?&quot;
+            </div>
             <div className="text-success-300">exit: 0</div>
           </div>
         </Tile>
