@@ -5,6 +5,8 @@ import {
   Cpu,
   Flame,
   Globe,
+  Laptop,
+  MonitorSmartphone,
   Rocket,
   Sparkles,
   Terminal,
@@ -150,9 +152,11 @@ export default function Home() {
           className="sm:col-span-2"
           delay={0}
         >
-          <div className="mt-4 rounded-lg border border-white/10 bg-black/30 p-3 font-mono text-xs leading-relaxed">
+          <div className="mt-auto w-full rounded-lg border border-white/10 bg-black/30 p-3 font-mono text-xs leading-relaxed">
             <div className="text-fg-muted">$ gcc main.c &amp;&amp; ./a.out</div>
             <div className="text-success-300">Sum = 42</div>
+            <div className="mt-1 text-fg-muted">$ echo &quot;exit: $?&quot;</div>
+            <div className="text-success-300">exit: 0</div>
           </div>
         </Tile>
 
@@ -160,10 +164,9 @@ export default function Home() {
           icon={Trophy}
           title={t("home.tile2Title")}
           text={t("home.tile2Text")}
-          className="lg:row-span-2"
           delay={80}
         >
-          <div className="mt-auto w-full rounded-xl border border-white/10 bg-ink-900/60 p-4 pt-5">
+          <div className="mt-auto w-full rounded-xl border border-white/10 bg-ink-900/60 p-4">
             <div className="mb-1.5 flex items-center justify-between text-xs text-fg-muted">
               <span className="font-semibold text-white">Level 4</span>
               <span>120 / 170 XP</span>
@@ -180,14 +183,37 @@ export default function Home() {
           title={t("home.tile3Title")}
           text={t("home.tile3Text")}
           delay={160}
-        />
+        >
+          <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
+            {["printf", "if / else", "for", "int *"].map((token) => (
+              <span
+                key={token}
+                className="rounded-md border border-white/10 bg-white/5 px-2 py-1 font-mono text-xs text-accent-300"
+              >
+                {token}
+              </span>
+            ))}
+          </div>
+        </Tile>
 
         <Tile
           icon={Globe}
           title={t("home.tile4Title")}
           text={t("home.tile4Text")}
+          className="sm:col-span-2"
           delay={240}
-        />
+        >
+          <div className="mt-auto flex items-center gap-2 pt-4">
+            {[Laptop, MonitorSmartphone, Globe].map((DeviceIcon, i) => (
+              <span
+                key={i}
+                className="inline-flex size-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-fg-muted"
+              >
+                <DeviceIcon className="size-4" aria-hidden="true" />
+              </span>
+            ))}
+          </div>
+        </Tile>
       </section>
     </div>
   );
