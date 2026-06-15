@@ -4,6 +4,8 @@ A web application for learning the C programming language through structured les
 
 Live: [code-it.gr](https://code-it.gr)
 
+CodeIT was built as a thesis project at International Hellenic University to support first-year students learning C. The lessons and exercises were designed to follow the course curriculum directly, covering the same topics and sequence taught in class. The goal was to give students a hands-on way to practice outside lectures and improve their chances of passing the exam.
+
 ![Home](Home.png)
 
 ## 📖 Overview
