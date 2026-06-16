@@ -1,0 +1,48 @@
+name: Supabase Keepalive
+
+# Free-tier Supabase projects are paused after ~7 days of inactivity.
+# This workflow issues a tiny read against the public `lessons` table on a
+# schedule so the database registers activity and stays awake.
+
+on:
+  schedule:
+    # Daily at 06:00 UTC. Well within the ~7-day inactivity window even if a
+    # few scheduled runs are skipped (GitHub may delay/drop cron under load).
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
+            echo "::error::SUPABASE_URL and/or SUPABASE_ANON_KEY secrets are not set."
+            exit 1
+          fi
+
+          # Trim any accidental trailing slash on the project URL.
+          base="${SUPABASE_URL%/}"
+          endpoint="${base}/rest/v1/lessons?select=id&limit=1"
+
+          echo "Pinging ${base}/rest/v1/lessons ..."
+
+          status=$(curl -sS -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${endpoint}")
+
+          echo "HTTP status: ${status}"
+
+          if [ "${status}" != "200" ]; then
+            echo "::error::Keepalive ping failed with HTTP ${status}."
+            exit 1
+          fi
+
+          echo "Supabase keepalive ping succeeded."
