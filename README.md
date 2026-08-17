@@ -1,49 +1,36 @@
 # CodeIT
 
-A web application for learning the C programming language through structured lessons, interactive exercises, and an in-browser compiler. Lessons are organized by topic, exercises are graded automatically, and user code is compiled and run against expected output.
+Learn C by writing it and running it against a real compiler. Lessons follow the first-year C curriculum at International Hellenic University one short step at a time, and every code exercise is compiled and checked against expected output.
 
-Live: [code-it.gr](https://code-it.gr)
+Live at [code-it.gr](https://code-it.gr).
 
-CodeIT was built as a thesis project at International Hellenic University to support first-year students learning C. The lessons and exercises were designed to follow the course curriculum directly, covering the same topics and sequence taught in class. The goal was to give students a hands-on way to practice outside lectures and improve their chances of passing the exam.
+![The CodeIT home page](Home.png)
 
-![Home](Home.png)
+## Why it exists
 
-## 📖 Overview
+This started as a thesis project at IHU. First-year students get a single C course, and many of them reach the exam having barely written C outside of lectures. CodeIT covers the same topics in the same order as the course, so a student can practise the material from that week instead of working through a generic tutorial.
 
-CodeIT delivers C lessons as short, sequential steps. Each step is one of three exercise types: multiple choice, fill in the blank, or a code task whose output is compiled and compared to an expected result. Progress, experience points, levels, and daily streaks are stored per user. Content is available in English and Greek, and lessons can be authored through a built-in admin editor.
+## How a lesson works
 
-The frontend is a single-page React application. Authentication, the database, and authorization are handled by Supabase; C code is compiled and executed by the Judge0 API.
+A lesson is a short sequence of steps, and each step is one of three kinds:
 
-## ✨ Features
+- Multiple choice, for concepts
+- Fill in the blank, for syntax
+- A code task, where you write C that gets compiled and run, and its output is compared against the expected result
 
-- Lessons grouped into sections (control flow, loops, functions, arrays, pointers, and more)
-- Three exercise types: multiple choice, fill in the blank, and code tasks executed against expected output
-- In-browser C compilation and execution via the Judge0 API
-- Progress tracking with experience points, levels, and daily streaks
-- Bilingual content (English and Greek) using react-i18next
-- Authentication with Supabase (email and password, Google, GitHub) and anonymous guest access
-- Admin lesson editor for creating lessons and exercises
-- Responsive interface built with a small reusable component library
+Completing a lesson awards XP, which feeds levels and a daily streak. Guests can work through everything without an account, but nothing is saved until they sign up. All content exists in English and Greek, and lessons are authored through a built-in admin editor rather than being hardcoded.
 
-## 🛠️ Tech Stack
+## Stack
 
-| Area                    | Technology                                      |
-| ----------------------- | ----------------------------------------------- |
-| Frontend                | React 19, React Router 7, Vite 6                |
-| Styling                 | Tailwind CSS 4                                  |
-| Backend, auth, database | Supabase (PostgreSQL, Auth, Row Level Security) |
-| Code execution          | Judge0 REST API (via RapidAPI)                  |
-| Internationalization    | react-i18next                                   |
-| Editor and highlighting | react-simple-code-editor, Prism                 |
-| Icons                   | lucide-react                                    |
+React 19 with React Router 7, bundled by Vite and styled with Tailwind 4. Supabase provides Postgres, authentication (email, Google, GitHub, and anonymous guests), and row-level security. Judge0, through RapidAPI, compiles and executes submitted C. Prism and react-simple-code-editor make up the editor, react-i18next handles translation, and the type is IBM Plex Sans with IBM Plex Mono.
 
-## 📁 Project Structure
+## Code layout
 
 ```
 src/
-├── assets/         Images and mascot illustrations
+├── assets/         Images and Cody, the mascot
 ├── components/
-│   ├── ui/         Reusable UI primitives (Button, Card, Input, Alert, ...)
+│   ├── ui/         Reusable primitives (Button, Card, Input, PageHeading, ...)
 │   ├── lesson/     Lesson screen subcomponents
 │   ├── admin/      Admin editor subcomponents
 │   ├── Header.jsx
@@ -51,65 +38,48 @@ src/
 │   └── ProtectedRoute.jsx
 ├── context/        Authentication provider
 ├── hooks/          useAuth, useLang, useUserStats
-├── lib/            Supabase client and data services (lessons, progress, stats, code)
+├── lib/            Supabase client and data services
 ├── locales/        English and Greek translations
 ├── pages/          Route-level components
 ├── index.css       Tailwind theme and design tokens
-└── main.jsx        Application entry point
+└── main.jsx        Entry point
 ```
 
-Data access is isolated in `src/lib`: each service module wraps a single concern (lessons, progress, statistics, code submission, and the Judge0 client). Shared state and logic live in `src/context` and `src/hooks`. The Supabase schema includes `lessons`, `progress`, `user_stats`, `submissions`, and `profiles` tables, with Row Level Security enforcing per-user access.
+Each module in `src/lib` wraps a single concern: lessons, progress, statistics, code submission, and the Judge0 client. Shared state lives in `src/context` and `src/hooks`. The Supabase side is five tables, `lessons`, `progress`, `user_stats`, `submissions` and `profiles`, with row-level security enforcing per-user access.
 
-## 🚀 Getting Started
+## Design notes
 
-### Prerequisites
+The palette is sampled from Cody, the mascot: cyan `#009bcc` for primary actions, screen green `#05d299` for program output, navy `#001e2f` for the page, and a warm white `#f3f0eb` in place of pure white for text. Everything is defined as tokens in `src/index.css` and consumed through Tailwind, so there is no second theme file to keep in step.
 
-- Node.js 18 or later
-- A Supabase project (URL and anon key)
-- A Judge0 API key from RapidAPI
+Page titles are set as compiler diagnostics. A locus line like `lessons.c:1:1: note:` sits above the heading with a `^~~~~` caret run underneath it, which is what `PageHeading` renders.
 
-### Installation
+Two constraints are worth knowing before changing anything typographic. IBM Plex Mono ships no Greek subset, so mono is reserved for content that is always Latin: code, file paths and digits. Translated captions use the `label` utility rather than `locus`, and Plex Sans backstops the mono stack so Greek can never drop through to a serif. Separately, C syntax colours are defined in `src/index.css` against those same tokens instead of being imported from a Prism theme, which is why the editor component pulls in no theme stylesheet.
+
+## Running it locally
+
+Node 18 or later.
 
 ```bash
-git clone https://github.com/Anesiadis-Th/codeit.git
-cd codeit
 npm install
-```
-
-### Environment Variables
-
-Create a `.env.local` file in the project root:
-
-```
-VITE_SUPABASE_URL=your-supabase-project-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_JUDGE0_API_KEY=your-rapidapi-judge0-key
-```
-
-These values are read at build time through Vite's `import.meta.env`. The `.env.local` file is git-ignored and should not be committed.
-
-### Running Locally
-
-```bash
 npm run dev
 ```
 
-The application is served at `http://localhost:5173` by default.
+The dev server comes up on `http://localhost:5173`. `npm run build`, `npm run preview` and `npm run lint` do what you would expect.
 
-## 📜 Available Scripts
+You also need a `.env.local` with your own credentials:
 
-| Command           | Description                            |
-| ----------------- | -------------------------------------- |
-| `npm run dev`     | Start the development server           |
-| `npm run build`   | Build the production bundle to `dist/` |
-| `npm run preview` | Serve the production build locally     |
-| `npm run lint`    | Run ESLint                             |
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_JUDGE0_API_KEY=
+```
 
-## ☁️ Deployment
+One caveat: the database schema is not in this repository. A fresh clone builds and runs, but with an empty Supabase project behind it there are no lessons to load, so [code-it.gr](https://code-it.gr) is the only place to see the app working properly.
 
-The application is a static single-page app and can be deployed to any static host. It is currently deployed on Netlify, with `public/_redirects` routing all paths to `index.html` for client-side routing. Set the three environment variables above in the hosting provider's configuration before building.
+## Deployment
 
-## 👤 Author
+A static single-page app, currently on Netlify, with `public/_redirects` sending every path to `index.html` for client-side routing. The three environment variables have to be set in the host's configuration, since Vite inlines them at build time.
 
-Theocharis Anesiadis
-[GitHub](https://github.com/Anesiadis-Th) · [LinkedIn](https://www.linkedin.com/in/anesiadis-theocharis/)
+---
+
+Theocharis Anesiadis · [GitHub](https://github.com/Anesiadis-Th) · [LinkedIn](https://www.linkedin.com/in/anesiadis-theocharis/)
