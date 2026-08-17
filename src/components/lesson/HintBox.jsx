@@ -17,8 +17,11 @@ export default function HintBox({ hint, show, onToggle }) {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="flex items-start gap-2.5 rounded-lg bg-hint px-4 py-3 leading-relaxed text-[#f0f0ff]">
-            <Lightbulb className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+          <div className="flex items-start gap-2.5 rounded-md border-l-2 border-accent-300 bg-surface-800 px-4 py-3 leading-relaxed text-fg">
+            <Lightbulb
+              className="mt-0.5 size-5 shrink-0 text-accent-300"
+              aria-hidden="true"
+            />
             <p>{hint}</p>
           </div>
         </div>

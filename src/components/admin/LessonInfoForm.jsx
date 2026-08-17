@@ -27,7 +27,7 @@ export default function LessonInfoForm({ meta, onChange }) {
 
   return (
     <Card variant="static">
-      <h3 className="mb-4 text-lg font-semibold text-white">
+      <h3 className="mb-4 text-lg font-semibold text-fg">
         {t("admin.lessonInfo")}
       </h3>
       <div className="flex flex-col gap-3">

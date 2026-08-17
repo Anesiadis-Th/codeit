@@ -1,43 +1,54 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, sans-serif;
+  /* Plex Mono has no Greek subset, so Plex Sans backstops it.  */
+  --font-mono:
+    "IBM Plex Mono", "IBM Plex Sans Variable", ui-monospace, monospace;
 
   /* Brand */
-  --color-brand-300: #858ae3;
-  --color-brand-500: #613dc1;
-  --color-brand-700: #4e148c;
-  --color-brand-900: #1d0b33;
+  --color-brand-300: #5cc9ea;
+  --color-brand-500: #009bcc;
 
   /* Accent */
-  --color-accent-300: #97dffc;
+  --color-accent-300: #7fd4ef;
 
-  /* Dark surfaces, page -> raised */
-  --color-surface-950: #1a1124;
-  --color-surface-900: #1e0f2f;
-  --color-surface-800: #2a1a3c;
-  --color-surface-700: #3a2551;
-  --color-ink-900: #1a1a2e;
+  /* Surfaces, page -> raised */
+  --color-surface-950: #001e2f;
+  --color-surface-900: #04293c;
+  --color-surface-800: #093a50;
+  --color-surface-700: #0f4459;
+  --color-ink-900: #00131f;
 
   /* Lines & muted */
-  --color-border-soft: #4a2a75;
-  --color-hint: #64438a;
+  --color-border-soft: #0f4a63;
+  --color-hint: #6a91a3; /* 5.05:1 on surface-950, which locus needs at 12px */
 
   /* Feedback */
-  --color-success-300: #6ee7a8;
-  --color-danger-300: #ff7a7a;
-  --color-streak: #ff7aa2;
+  --color-success-300: #05d299;
+  --color-danger-300: #ff6b61;
+  --color-streak: #ffb454;
 
   /* Text */
-  --color-fg: #e0e0f5;
-  --color-fg-muted: #bbbbdd;
+  --color-fg: #f3f0eb;
+  --color-fg-muted: #9fb8c4;
 
   /* Motion */
   --animate-fade-up: fade-up 0.5s ease both;
-  --animate-float: float 3.5s ease-in-out infinite;
   --animate-shake: shake 0.4s ease;
   --animate-pulse-success: pulse-success 1.2s ease;
+  --animate-print: print 0.32s ease both;
+
+  @keyframes print {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @keyframes fade-up {
     from {
@@ -47,16 +58,6 @@
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
     }
   }
 
@@ -92,12 +93,76 @@
   }
 }
 
-/* Gradient headline used across pages */
-@utility text-gradient {
-  background-image: linear-gradient(to right, var(--color-accent-300), var(--color-brand-300));
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+@utility display {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 82;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+
+/* Mono, so only wrap Latin content in it: paths, line numbers, digits. */
+@utility locus {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--color-hint);
+}
+
+/* Same size as locus but sans, for captions that get translated. */
+@utility label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-hint);
+}
+
+/* Prism token colours. No upstream Prism theme is imported. */
+@layer components {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+    tab-size: 4;
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.cdata {
+    color: var(--color-hint);
+  }
+
+  .token.punctuation,
+  .token.operator {
+    color: var(--color-fg-muted);
+  }
+
+  .token.keyword,
+  .token.class-name,
+  .token.boolean {
+    color: var(--color-brand-300);
+  }
+
+  .token.string,
+  .token.char {
+    color: --alpha(var(--color-success-300) / 75%);
+  }
+
+  .token.number,
+  .token.constant,
+  .token.macro,
+  .token.directive,
+  .token.directive-hash {
+    color: var(--color-streak);
+  }
+
+  .token.function {
+    color: var(--color-fg);
+  }
+
+  .token.macro .token.string {
+    color: --alpha(var(--color-success-300) / 75%);
+  }
 }
 
 @layer base {
@@ -107,5 +172,22 @@
 
   body {
     @apply bg-surface-950 text-fg font-sans antialiased overflow-x-hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-300);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

@@ -68,7 +68,7 @@ export default function AdminLessonEditor() {
 
   return (
     <section>
-      <h2 className="mb-4 text-2xl font-bold text-white">
+      <h2 className="mb-4 text-2xl font-bold text-fg">
         {t("admin.createLesson")}
       </h2>
 

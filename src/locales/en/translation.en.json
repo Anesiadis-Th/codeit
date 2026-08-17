@@ -1,15 +1,12 @@
 {
   "common": {
-    "loading": "Loading…",
     "error": "Something went wrong.",
     "retry": "Try again"
   },
-
   "footer": {
     "builtWith": "Built with",
     "by": "by Theocharis Anesiadis · CodeIT © 2025"
   },
-
   "admin": {
     "accessDenied": "Access denied",
     "accessDeniedHint": "You need administrator rights to view this page.",
@@ -25,9 +22,9 @@
     "rawJson": "Raw JSON",
     "saveLesson": "Save Lesson",
     "saveSuccess": "Lesson saved successfully!",
-    "saveError": "Failed to save lesson: {{message}}"
+    "saveError": "Failed to save lesson: {{message}}",
+    "pageNote": "changes here are live for every student"
   },
-
   "header": {
     "lessons": "Lessons",
     "practice": "Practice",
@@ -36,27 +33,29 @@
     "login": "Login",
     "logout": "Logout"
   },
-
   "home": {
-    "badge": "100% free · runs in your browser",
-    "heroTitle": "Learn C by actually writing it",
-    "heroSubtitle": "Open a lesson, write real C in your browser, and run it on a real compiler. Earn XP, keep your streak going, and work your way from \"Hello, World\" to pointers — no setup required.",
-    "ctaPrimary": "Start learning",
+    "locus": "runs in your browser, nothing to install",
+    "heroLead": "Learn C by",
+    "heroEmphasis": "running it",
+    "heroSubtitle": "Write C in the browser and compile it on a real toolchain. Same output, same errors you would get in a terminal. Built for first-year students at IHU, free for anyone.",
+    "ctaPrimary": "Start the first lesson",
     "ctaSecondary": "Open the playground",
-    "tile1Title": "Real C, really compiled",
-    "tile1Text": "Your code runs on an actual C compiler — not a fake sandbox. Same output, same errors you'd hit in a real terminal.",
-    "tile2Title": "XP, levels & streaks",
-    "tile2Text": "Every lesson earns XP. Level up, keep your daily streak alive, and watch your progress stack up.",
-    "tile3Title": "Bite-sized lessons",
-    "tile3Text": "From printf to pointers, one small step at a time, with a hint waiting whenever you get stuck.",
-    "tile4Title": "Zero setup",
-    "tile4Text": "Nothing to install, nothing to configure. Open a tab and start coding on any device."
+    "pathTitle": "What you learn, in order",
+    "pathNote": "each section builds on the one before",
+    "stepsTitle": "Three kinds of questions",
+    "typeChoice": "multiple choice",
+    "typeBlank": "fill in the blank",
+    "typeCode": "code task",
+    "choiceQuestion": "Which type holds a whole number?",
+    "blankQuestion": "Complete the call so it prints n.",
+    "codeQuestion": "Print the numbers 1 to 5, separated by spaces.",
+    "closeTitle": "Ready when you are",
+    "closeText": "Start with Hello World. You can try it as a guest."
   },
   "dashboard": {
     "title": "Your Dashboard",
     "welcome": "Welcome",
     "streak": "Streak",
-    "days": "day(s)",
     "level": "Level",
     "xp": "XP",
     "xpToNext": "Need {{xp}} XP to level up",
@@ -64,7 +63,8 @@
     "completed": "completed",
     "continueLearning": "Continue Learning",
     "nextUp": "Next up",
-    "goToLesson": "Go to Lesson"
+    "goToLesson": "Go to Lesson",
+    "pageNote": "everything you have earned so far"
   },
   "lessons": {
     "pageTitle": "Your Lessons",
@@ -81,7 +81,8 @@
     "notStarted": "Uncompleted",
     "review": "Review Lesson",
     "start": "Start Lesson",
-    "loadError": "Couldn't load the lessons."
+    "loadError": "Couldn't load the lessons.",
+    "pageNote": "pick a section to begin"
   },
   "login": {
     "title": "Welcome Back",
@@ -95,7 +96,6 @@
     "sendReset": "Send reset link",
     "resetSuccess": "Reset link sent! Check your email."
   },
-
   "signup": {
     "title": "Create Your Account",
     "email": "Email",
@@ -109,16 +109,15 @@
     "haveAccount": "Already have an account?",
     "login": "Log in"
   },
-
   "practice": {
     "title": "Practice C Code",
     "runCode": "Run Code",
     "submitting": "Submitting...",
     "output": "Output",
     "noOutput": "No output, please check your code.",
-    "executionFailed": "Execution failed: {{message}}"
+    "executionFailed": "Execution failed: {{message}}",
+    "pageNote": "write anything and compile it"
   },
-
   "lesson": {
     "question": "Question {{current}} of {{total}}",
     "needHelp": "Need Help?",
@@ -128,8 +127,6 @@
     "running": "Running...",
     "output": "Output",
     "error": "Error",
-    "outputCorrect": "Output is correct!",
-    "outputWrong": "Output does not match expected result. Check your code again!",
     "submit": "Submit",
     "answerCorrect": "Correct!",
     "answerWrong": "That’s not correct yet — review the options and try again!",
@@ -137,16 +134,14 @@
     "codeOutputIncorrect": "Output does not match expected result. Check your code again!",
     "completed": "Lesson Complete!",
     "skippedNoXP": "Completed, but you did not earn XP because you used the Skip button.",
-
     "guestMessage": "Great job finishing the lesson!\nSign up to save your progress and earn XP next time! 🔓",
     "signedInCongrats": "You've earned 10 XP and kept your streak alive! 🔥",
-    "guestPrompt": "Sign up to save your progress and earn XP next time! 🔓",
-    "redirecting": "Redirecting back to lessons...",
     "continue": "Continue",
     "skip": "Skip Question",
     "backToLessons": "Back to Lessons",
     "goToDashboard": "Go to Dashboard",
     "percentComplete": "{{percent}}% complete",
-    "typeAnswer": "Type your answer"
+    "typeAnswer": "Type your answer",
+    "stepOf": "step {{current}} of {{total}}"
   }
 }

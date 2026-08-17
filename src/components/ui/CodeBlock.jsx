@@ -7,13 +7,9 @@ const variants = {
 export default function CodeBlock({ variant = "expected", label, className = "", children }) {
   return (
     <div className={className}>
-      {label && (
-        <p className="mb-1.5 text-xs font-semibold tracking-wide text-fg-muted uppercase">
-          {label}
-        </p>
-      )}
+      {label && <p className="label mb-1.5">{label}</p>}
       <pre
-        className={`rounded-lg border px-4 py-3 font-mono text-sm whitespace-pre-wrap ${variants[variant]}`}
+        className={`rounded-md border px-4 py-3 font-mono text-sm whitespace-pre-wrap ${variants[variant]}`}
       >
         {children}
       </pre>

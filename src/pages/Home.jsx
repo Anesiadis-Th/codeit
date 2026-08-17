@@ -1,105 +1,126 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  BookOpen,
-  Cpu,
-  Flame,
-  Globe,
-  Laptop,
-  MonitorSmartphone,
-  Rocket,
-  Sparkles,
-  Terminal,
-  Trophy,
-} from "lucide-react";
+import { ArrowRight, Terminal } from "lucide-react";
 import Button from "../components/ui/Button";
-import ProgressBar from "../components/ui/ProgressBar";
+import { Underlined } from "../components/ui/PageHeading";
+import cody_coding from "../assets/cody_coding.png";
 
-function CodeWindow() {
+const transcript = [
+  { text: "$ cat hello.c", tone: "text-hint" },
+  {
+    code: [
+      ["#include", "text-streak"],
+      [" <stdio.h>", "text-success-300/70"],
+    ],
+  },
+  { spacer: true },
+  {
+    code: [
+      ["int", "text-brand-300"],
+      [" main", "text-fg"],
+      ["(", "text-fg-muted"],
+      ["void", "text-brand-300"],
+      [") {", "text-fg-muted"],
+    ],
+  },
+  {
+    indent: 1,
+    code: [
+      ["printf", "text-fg"],
+      ["(", "text-fg-muted"],
+      ['"Hello, C!\\n"', "text-success-300/70"],
+      [");", "text-fg-muted"],
+    ],
+  },
+  {
+    indent: 1,
+    code: [
+      ["return", "text-brand-300"],
+      [" 0", "text-streak"],
+      [";", "text-fg-muted"],
+    ],
+  },
+  { code: [["}", "text-fg-muted"]] },
+  { spacer: true },
+  { text: "$ gcc hello.c -o hello && ./hello", tone: "text-hint" },
+  { text: "Hello, C!", tone: "text-success-300 font-medium" },
+];
+
+function Transcript() {
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-ink-900 shadow-2xl shadow-black/50">
-      <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2.5">
-        <span className="size-3 rounded-full bg-[#ff5f57]" />
-        <span className="size-3 rounded-full bg-[#febc2e]" />
-        <span className="size-3 rounded-full bg-[#28c840]" />
-        <span className="ml-2 font-mono text-xs text-fg-muted">hello.c</span>
-      </div>
+    <div className="overflow-x-auto rounded-md border border-border-soft bg-ink-900 p-5 font-mono text-[13px] leading-[1.7] sm:text-sm">
+      {transcript.map((line, i) => {
+        const delay = { animationDelay: `${180 + i * 90}ms` };
 
-      <div className="space-y-1 overflow-x-auto p-4 font-mono text-sm leading-relaxed">
-        <div>
-          <span className="text-streak">#include</span>{" "}
-          <span className="text-success-300">{"<stdio.h>"}</span>
-        </div>
-        <div>&nbsp;</div>
-        <div>
-          <span className="text-brand-300">int</span>{" "}
-          <span className="text-accent-300">main</span>
-          <span className="text-fg-muted">(</span>
-          <span className="text-brand-300">void</span>
-          <span className="text-fg-muted">) {"{"}</span>
-        </div>
-        <div className="pl-4">
-          <span className="text-accent-300">printf</span>
-          <span className="text-fg-muted">(</span>
-          <span className="text-success-300">{'"Hello, C!\\n"'}</span>
-          <span className="text-fg-muted">);</span>
-        </div>
-        <div className="pl-4">
-          <span className="text-brand-300">return</span>{" "}
-          <span className="text-streak">0</span>
-          <span className="text-fg-muted">;</span>
-        </div>
-        <div>
-          <span className="text-fg-muted">{"}"}</span>
-        </div>
-      </div>
+        if (line.spacer) {
+          return <div key={i} className="h-4" aria-hidden="true" />;
+        }
 
-      <div className="border-t border-white/10 bg-black/30 px-4 py-3 font-mono text-xs leading-relaxed">
-        <div className="text-fg-muted">$ gcc hello.c &amp;&amp; ./a.out</div>
-        <div className="text-success-300">Hello, C!</div>
-      </div>
-    </div>
-  );
-}
-
-function Tile({
-  icon: Icon,
-  title,
-  text,
-  className = "",
-  delay = 0,
-  children,
-}) {
-  return (
-    <div
-      className={`animate-fade-up group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface-900 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-brand-500/40 hover:shadow-lg hover:shadow-brand-500/10 ${className}`}
-      style={delay ? { animationDelay: `${delay}ms` } : undefined}
-    >
-      <div className="mb-3 inline-flex size-10 items-center justify-center rounded-xl bg-brand-500/15 text-accent-300">
-        {Icon && <Icon className="size-5" aria-hidden="true" />}
-      </div>
-      <h3 className="mb-1.5 text-lg font-semibold text-white">{title}</h3>
-      {text && <p className="text-sm leading-relaxed text-fg-muted">{text}</p>}
-      {children}
-    </div>
-  );
-}
-
-function StreakDots() {
-  // 5 of 7 days active — a language-neutral weekly streak visual
-  const days = [true, true, true, true, true, false, false];
-  return (
-    <div className="flex items-center gap-2">
-      <Flame className="size-4 shrink-0 text-streak" aria-hidden="true" />
-      <div className="flex gap-1.5">
-        {days.map((active, i) => (
-          <span
+        return (
+          <div
             key={i}
-            className={`size-2.5 rounded-full ${active ? "bg-streak" : "bg-white/10"}`}
-          />
-        ))}
+            style={delay}
+            className={`animate-print whitespace-pre ${line.indent ? "pl-6" : ""} ${
+              line.tone || ""
+            }`}
+          >
+            {line.text ??
+              line.code.map(([chunk, tone], j) => (
+                <span key={j} className={tone}>
+                  {chunk}
+                </span>
+              ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Labels are the same i18n keys the Lessons page uses, so the two stay
+   in sync. Order matches the curriculum and the numbering depends on it. */
+const path = [
+  { key: "lessons.sectionWelcome", token: "main()" },
+  { key: "lessons.sectionGettingStarted", token: "int x = 5;" },
+  { key: "lessons.sectionControlFlow", token: "if / else" },
+  { key: "lessons.sectionLoops", token: "for (;;)" },
+  { key: "lessons.sectionFunctions", token: "int add(a, b)" },
+  { key: "lessons.sectionArrays", token: "arr[i]" },
+  { key: "lessons.sectionPointers", token: "int *p = &x;" },
+];
+
+function Path() {
+  const { t } = useTranslation();
+
+  return (
+    <ol className="border-t border-border-soft">
+      {path.map((step, i) => (
+        <li
+          key={step.key}
+          className="flex items-baseline gap-4 border-b border-border-soft py-4 sm:gap-6"
+        >
+          <span className="locus w-6 shrink-0 tabular-nums">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <span className="display flex-1 text-lg text-fg sm:text-xl">
+            {t(step.key)}
+          </span>
+          <code className="font-mono text-xs text-brand-300 sm:text-sm">
+            {step.token}
+          </code>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function Specimen({ label, children }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="label">{label}</p>
+      <div className="flex-1 rounded-md border border-border-soft bg-surface-900 p-4">
+        {children}
       </div>
-      <span className="text-xs font-semibold text-streak">5</span>
     </div>
   );
 }
@@ -109,34 +130,27 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative mx-auto max-w-5xl px-4 pb-16">
-      {/* Hero */}
-      <section className="relative grid items-center gap-10 py-12 lg:grid-cols-2 lg:py-20">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -left-24 -z-10 size-96 rounded-full bg-brand-500/25 blur-3xl"
-        />
+    <div className="mx-auto max-w-5xl px-4 pb-1 sm:px-6">
+      <section className="grid items-center gap-10 py-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-16">
+        <div>
+          <p className="locus mb-4">
+            hello.c:1:1: <span className="text-accent-300">note:</span>{" "}
+            <span className="label text-fg-muted">{t("home.locus")}</span>
+          </p>
 
-        <div className="animate-fade-up">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-fg-muted">
-            <Sparkles className="size-3.5 text-accent-300" aria-hidden="true" />
-            {t("home.badge")}
-          </span>
-
-          <h1 className="mt-5 text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl">
-            {t("home.heroTitle")}
+          <h1 className="display pb-[0.42em] text-[2.6rem] text-fg sm:text-6xl">
+            {t("home.heroLead")}{" "}
+            <Underlined>
+              <span className="text-accent-300">{t("home.heroEmphasis")}</span>
+            </Underlined>
           </h1>
 
-          <p className="mt-4 max-w-md text-lg leading-relaxed text-fg-muted">
+          <p className="mt-5 max-w-md leading-relaxed text-fg-muted">
             {t("home.heroSubtitle")}
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Button icon={Rocket} onClick={() => navigate("/lessons")}>
+          <div className="mt-9 flex flex-wrap justify-center gap-3 sm:justify-start">
+            <Button icon={ArrowRight} onClick={() => navigate("/lessons")}>
               {t("home.ctaPrimary")}
             </Button>
             <Button
@@ -149,84 +163,87 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="animate-fade-up" style={{ animationDelay: "150ms" }}>
-          <CodeWindow />
+        <Transcript />
+      </section>
+
+      <section className="py-10 sm:py-12">
+        <div className="mb-8 flex items-baseline justify-between gap-4">
+          <h2 className="display text-2xl text-fg sm:text-3xl">
+            {t("home.pathTitle")}
+          </h2>
+          <p className="label hidden sm:block">{t("home.pathNote")}</p>
+        </div>
+        <Path />
+      </section>
+
+      <section className="py-10 sm:py-12">
+        <h2 className="display mb-8 text-2xl text-fg sm:text-3xl">
+          {t("home.stepsTitle")}
+        </h2>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <Specimen label={t("home.typeChoice")}>
+            <p className="mb-3 text-sm leading-relaxed text-fg">
+              {t("home.choiceQuestion")}
+            </p>
+            <ul className="space-y-1.5 font-mono text-xs">
+              <li className="rounded-sm border border-border-soft px-2.5 py-1.5 text-fg-muted">
+                char
+              </li>
+              <li className="rounded-sm border border-success-300/50 bg-success-300/10 px-2.5 py-1.5 text-success-300">
+                int
+              </li>
+              <li className="rounded-sm border border-border-soft px-2.5 py-1.5 text-fg-muted">
+                float
+              </li>
+            </ul>
+          </Specimen>
+
+          <Specimen label={t("home.typeBlank")}>
+            <p className="mb-3 text-sm leading-relaxed text-fg">
+              {t("home.blankQuestion")}
+            </p>
+            <div className="rounded-sm bg-ink-900 p-3 font-mono text-xs leading-relaxed">
+              <span className="text-fg">printf</span>
+              <span className="text-fg-muted">(</span>
+              <span className="text-success-300/70">&quot;%d&quot;</span>
+              <span className="text-fg-muted">, </span>
+              <span className="border-b-2 border-streak px-3 text-streak" />
+              <span className="text-fg-muted">);</span>
+            </div>
+          </Specimen>
+
+          <Specimen label={t("home.typeCode")}>
+            <p className="mb-3 text-sm leading-relaxed text-fg">
+              {t("home.codeQuestion")}
+            </p>
+            <div className="rounded-sm bg-ink-900 p-3 font-mono text-xs leading-relaxed">
+              <div className="text-hint">$ ./a.out</div>
+              <div className="text-success-300">1 2 3 4 5</div>
+            </div>
+          </Specimen>
         </div>
       </section>
 
-      {/* Bento features */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Tile
-          icon={Cpu}
-          title={t("home.tile1Title")}
-          text={t("home.tile1Text")}
-          className="sm:col-span-2"
-          delay={0}
-        >
-          <div className="mt-auto w-full rounded-lg border border-white/10 bg-black/30 p-3 font-mono text-xs leading-relaxed">
-            <div className="text-fg-muted">$ gcc main.c &amp;&amp; ./a.out</div>
-            <div className="text-success-300">Sum = 42</div>
-            <div className="mt-1 text-fg-muted">
-              $ echo &quot;exit: $?&quot;
-            </div>
-            <div className="text-success-300">exit: 0</div>
+      <section className="mt-4 flex flex-col items-center gap-8 border-t border-border-soft pt-12 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-5">
+          <img
+            src={cody_coding}
+            alt=""
+            aria-hidden="true"
+            className="w-20 shrink-0 select-none"
+          />
+          <div>
+            <h2 className="display text-2xl text-fg">{t("home.closeTitle")}</h2>
+            <p className="mt-1.5 text-sm text-fg-muted">
+              {t("home.closeText")}
+            </p>
           </div>
-        </Tile>
+        </div>
 
-        <Tile
-          icon={Trophy}
-          title={t("home.tile2Title")}
-          text={t("home.tile2Text")}
-          delay={80}
-        >
-          <div className="mt-auto w-full rounded-xl border border-white/10 bg-ink-900/60 p-4">
-            <div className="mb-1.5 flex items-center justify-between text-xs text-fg-muted">
-              <span className="font-semibold text-white">Level 4</span>
-              <span>120 / 170 XP</span>
-            </div>
-            <ProgressBar value={70} label="XP progress" />
-            <div className="mt-4 border-t border-white/10 pt-4">
-              <StreakDots />
-            </div>
-          </div>
-        </Tile>
-
-        <Tile
-          icon={BookOpen}
-          title={t("home.tile3Title")}
-          text={t("home.tile3Text")}
-          delay={160}
-        >
-          <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-            {["printf", "if / else", "for", "int *"].map((token) => (
-              <span
-                key={token}
-                className="rounded-md border border-white/10 bg-white/5 px-2 py-1 font-mono text-xs text-accent-300"
-              >
-                {token}
-              </span>
-            ))}
-          </div>
-        </Tile>
-
-        <Tile
-          icon={Globe}
-          title={t("home.tile4Title")}
-          text={t("home.tile4Text")}
-          className="sm:col-span-2"
-          delay={240}
-        >
-          <div className="mt-auto flex items-center gap-2 pt-4">
-            {[Laptop, MonitorSmartphone, Globe].map((DeviceIcon, i) => (
-              <span
-                key={i}
-                className="inline-flex size-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-fg-muted"
-              >
-                <DeviceIcon className="size-4" aria-hidden="true" />
-              </span>
-            ))}
-          </div>
-        </Tile>
+        <Button icon={ArrowRight} onClick={() => navigate("/lessons")}>
+          {t("home.ctaPrimary")}
+        </Button>
       </section>
     </div>
   );

@@ -46,7 +46,7 @@ export default function Login() {
 
   return (
     <div className="mx-auto w-full max-w-md px-4 py-10">
-      <h2 className="text-gradient animate-fade-up mb-6 text-center text-3xl font-bold">
+      <h2 className="display mb-6 text-center text-3xl text-fg">
         {t("login.title")}
       </h2>
 

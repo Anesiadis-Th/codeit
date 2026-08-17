@@ -4,7 +4,7 @@ export default function QuestionMultipleChoice({ options, selected, onSelect }) 
       {options.map((option, idx) => (
         <label
           key={idx}
-          className="mb-2 flex cursor-pointer items-start gap-3 rounded-xl p-4 transition hover:bg-white/10 has-[:checked]:bg-white/10"
+          className="mb-2 flex cursor-pointer items-start gap-3 rounded-md border border-border-soft bg-surface-900 p-4 transition-colors hover:border-brand-500 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-500/10"
         >
           <input
             type="radio"
@@ -16,7 +16,7 @@ export default function QuestionMultipleChoice({ options, selected, onSelect }) 
           />
           <span
             aria-hidden="true"
-            className="relative mt-0.5 size-5 shrink-0 rounded-full bg-ink-900 ring-1 ring-accent-300 transition after:absolute after:inset-1 after:scale-0 after:rounded-full after:bg-accent-300 after:transition-transform after:duration-200 peer-checked:after:scale-100 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface-800"
+            className="relative mt-0.5 size-5 shrink-0 rounded-full bg-ink-900 ring-1 ring-hint transition after:absolute after:inset-1 after:scale-0 after:rounded-full after:bg-brand-500 after:transition-transform after:duration-200 peer-checked:ring-brand-500 peer-checked:after:scale-100 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-300 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface-900"
           />
           <span className="leading-relaxed break-words">{option}</span>
         </label>
