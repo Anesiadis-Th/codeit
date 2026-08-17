@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Code2 } from "lucide-react";
 import { submitCode } from "../lib/codeService";
 import { runCCode } from "../lib/judge0Service";
 import { supabase } from "../lib/supabaseClient";
@@ -8,6 +7,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import CodeEditor from "../components/ui/CodeEditor";
 import CodeBlock from "../components/ui/CodeBlock";
+import PageHeading from "../components/ui/PageHeading";
 
 export default function Practice() {
   const { t } = useTranslation();
@@ -62,10 +62,9 @@ export default function Practice() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
-        <Code2 className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
-        <span className="text-gradient">{t("practice.title")}</span>
-      </h1>
+      <PageHeading locus="scratch.c:1:1" message={t("practice.pageNote")}>
+        {t("practice.title")}
+      </PageHeading>
 
       <Card animated delay={100}>
         <CodeEditor value={code} onChange={setCode} />

@@ -11,6 +11,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Alert from "../components/ui/Alert";
 import Spinner from "../components/ui/Spinner";
+import PageHeading from "../components/ui/PageHeading";
 import LessonProgress from "../components/lesson/LessonProgress";
 import HintBox from "../components/lesson/HintBox";
 import QuestionMultipleChoice from "../components/lesson/QuestionMultipleChoice";
@@ -193,9 +194,15 @@ export default function LessonScreen() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h2 className="text-gradient animate-fade-up my-6 text-3xl font-bold">
+      <PageHeading
+        locus={`lesson.c:${questionIndex + 1}:1`}
+        message={t("lesson.stepOf", {
+          current: questionIndex + 1,
+          total: steps.length,
+        })}
+      >
         {lesson.title}
-      </h2>
+      </PageHeading>
 
       {completed ? (
         <LessonComplete isGuest={isGuest} hasSkipped={hasSkipped} />
@@ -225,7 +232,7 @@ export default function LessonScreen() {
           >
             <LessonProgress current={questionIndex + 1} total={steps.length} />
 
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-fg">
               {t("lesson.question", {
                 current: questionIndex + 1,
                 total: steps.length,

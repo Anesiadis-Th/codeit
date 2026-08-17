@@ -8,10 +8,10 @@ export default function ProgressBar({ value, label, className = "" }) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={label}
-      className={`h-3.5 w-full overflow-hidden rounded-full bg-surface-800 shadow-inner shadow-black/60 ${className}`}
+      className={`h-1.5 w-full overflow-hidden rounded-xs bg-surface-700 ${className}`}
     >
       <div
-        className="h-full rounded-full bg-gradient-to-r from-accent-300 to-brand-500 transition-[width] duration-500 ease-out"
+        className="h-full bg-brand-500 transition-[width] duration-500 ease-out"
         style={{ width: `${clamped}%` }}
       />
     </div>

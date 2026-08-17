@@ -21,7 +21,7 @@ export default function Alert({ variant = "info", className = "", children }) {
   return (
     <div
       role="alert"
-      className={`flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm font-medium ${classes} ${className}`}
+      className={`flex items-start gap-2.5 rounded-md border px-4 py-3 text-sm font-medium ${classes} ${className}`}
     >
       <Icon className="size-5 shrink-0" aria-hidden="true" />
       <div className="leading-relaxed">{children}</div>

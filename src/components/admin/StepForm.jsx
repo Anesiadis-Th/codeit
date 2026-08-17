@@ -58,7 +58,7 @@ export default function StepForm({ onAdd }) {
 
   return (
     <Card variant="static">
-      <h3 className="mb-4 text-lg font-semibold text-white">
+      <h3 className="mb-4 text-lg font-semibold text-fg">
         {t("admin.addStep")}
       </h3>
 

@@ -15,10 +15,10 @@ function NavItem({ to, onClick, children }) {
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
-        `rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+        `border-b-2 px-1 py-1 text-sm font-medium transition-colors ${
           isActive
-            ? "bg-white/10 text-fg"
-            : "text-fg-muted hover:bg-white/5 hover:text-fg"
+            ? "border-brand-500 text-fg"
+            : "border-transparent text-fg-muted hover:text-fg"
         }`
       }
     >
@@ -107,20 +107,20 @@ export default function Header() {
     );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-surface-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border-soft bg-surface-950/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           to="/"
           onClick={close}
-          className="flex items-center gap-2 font-mono text-xl font-bold tracking-tight text-white"
+          className="flex items-center gap-2.5 font-mono text-lg font-semibold tracking-tight text-fg"
         >
           <img src={mascotLogo} alt="" aria-hidden="true" className="h-7 w-8" />
-          Code<span className="text-accent-300">IT</span>
+          Code<span className="text-brand-500">IT</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">{nav}</nav>
+        <nav className="hidden items-center gap-6 md:flex">{nav}</nav>
 
-        <div className="hidden items-center gap-3 md:flex">{authActions()}</div>
+        <div className="hidden items-center gap-4 md:flex">{authActions()}</div>
 
         <button
           type="button"
@@ -134,9 +134,9 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-white/10 bg-surface-950/95 px-4 py-4 md:hidden">
-          <nav className="flex flex-col gap-1">{nav}</nav>
-          <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
+        <div className="border-t border-border-soft bg-surface-950/95 px-4 py-4 md:hidden">
+          <nav className="flex flex-col items-start gap-3">{nav}</nav>
+          <div className="mt-4 flex flex-col gap-3 border-t border-border-soft pt-4">
             {authActions(true)}
           </div>
         </div>

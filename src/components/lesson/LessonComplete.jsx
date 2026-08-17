@@ -25,7 +25,7 @@ export default function LessonComplete({ isGuest, hasSkipped }) {
       <Card variant="static" animated>
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           <div className="flex-1 space-y-3">
-            <h3 className="flex items-center gap-2 text-xl font-semibold text-white">
+            <h3 className="flex items-center gap-2 text-xl font-semibold text-fg">
               <PartyPopper className="size-6 shrink-0 text-accent-300" aria-hidden="true" />
               {t("lesson.completed")}
             </h3>

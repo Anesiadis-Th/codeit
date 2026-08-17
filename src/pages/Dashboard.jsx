@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, Clock, Flame, Gamepad2, Target, TrendingUp } from "lucide-react";
+import { CheckCircle2, Clock, Flame, Target, TrendingUp } from "lucide-react";
 import { fetchUserProgress } from "../lib/progressService";
 import { fetchAllLessons } from "../lib/lessonService";
 import { computeLevel } from "../lib/levels";
@@ -11,6 +11,7 @@ import { useLang } from "../hooks/useLang";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
+import PageHeading from "../components/ui/PageHeading";
 import ProgressBar from "../components/ui/ProgressBar";
 import Skeleton from "../components/ui/Skeleton";
 import cody_coding from "../assets/cody_coding.png";
@@ -93,10 +94,9 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
-        <Gamepad2 className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
-        <span className="text-gradient">{t("dashboard.title")}</span>
-      </h1>
+      <PageHeading locus="progress.c:1:1" message={t("dashboard.pageNote")}>
+        {t("dashboard.title")}
+      </PageHeading>
 
       <div className="space-y-6">
         <Card animated mascot={cody_coding}>
@@ -125,14 +125,14 @@ export default function Dashboard() {
         </Card>
 
         <Card animated delay={150}>
-          <h2 className="mb-4 text-xl font-semibold text-white">
+          <h2 className="mb-4 text-xl font-semibold text-fg">
             {t("dashboard.yourLessons")}
           </h2>
           <ul className="space-y-2">
             {lessons.map((lesson) => (
               <li
                 key={lesson.id}
-                className="flex items-center justify-between gap-3 rounded-xl bg-surface-800 px-4 py-3 transition hover:bg-surface-700"
+                className="flex items-center justify-between gap-3 rounded-md bg-surface-800 px-4 py-3 transition hover:bg-surface-700"
               >
                 <span className="font-medium">{lesson.title}</span>
                 {progress[lesson.id] ? (
@@ -155,7 +155,7 @@ export default function Dashboard() {
 
         {nextLesson && (
           <Card animated delay={300}>
-            <h2 className="mb-2 text-xl font-semibold text-white">
+            <h2 className="mb-2 text-xl font-semibold text-fg">
               {t("dashboard.continueLearning")}
             </h2>
             <p className="mb-4 leading-relaxed">

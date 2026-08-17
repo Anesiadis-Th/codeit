@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ShieldCheck } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useLang } from "../hooks/useLang";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
+import PageHeading from "../components/ui/PageHeading";
 import AdminLessonEditor from "./AdminLessonEditor";
 
 export default function AdminDashboard() {
@@ -45,13 +45,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
-        <ShieldCheck className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
-        <span className="text-gradient">{t("admin.title")}</span>
-      </h1>
+      <PageHeading locus="admin.c:1:1" kind="warning" message={t("admin.pageNote")}>
+        {t("admin.title")}
+      </PageHeading>
 
       <Card variant="static" className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">
+        <h2 className="mb-4 text-lg font-semibold text-fg">
           {t("admin.existingLessons")}
         </h2>
 
@@ -62,7 +61,7 @@ export default function AdminDashboard() {
             {lessons.map((lesson) => (
               <li
                 key={lesson.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-ink-900 px-4 py-3"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-ink-900 px-4 py-3"
               >
                 <div>
                   <span className="font-medium">{lesson.title}</span>{" "}

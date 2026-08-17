@@ -9,7 +9,7 @@ export default function StepList({ steps, onRemove }) {
 
   return (
     <Card variant="static">
-      <h3 className="mb-4 text-lg font-semibold text-white">
+      <h3 className="mb-4 text-lg font-semibold text-fg">
         {t("admin.steps")} ({steps.length})
       </h3>
 
@@ -20,7 +20,7 @@ export default function StepList({ steps, onRemove }) {
           {steps.map((step, idx) => (
             <li
               key={idx}
-              className="flex items-start justify-between gap-3 rounded-xl bg-ink-900 px-4 py-3"
+              className="flex items-start justify-between gap-3 rounded-md bg-ink-900 px-4 py-3"
             >
               <div className="min-w-0">
                 <Badge variant="pending">{step.type}</Badge>
@@ -46,7 +46,7 @@ export default function StepList({ steps, onRemove }) {
           <summary className="cursor-pointer text-sm text-fg-muted transition hover:text-fg">
             {t("admin.rawJson")}
           </summary>
-          <pre className="mt-2 overflow-x-auto rounded-lg border border-border-soft bg-ink-900 p-3 font-mono text-xs whitespace-pre-wrap">
+          <pre className="mt-2 overflow-x-auto rounded-md border border-border-soft bg-ink-900 p-3 font-mono text-xs whitespace-pre-wrap">
             {JSON.stringify(steps, null, 2)}
           </pre>
         </details>

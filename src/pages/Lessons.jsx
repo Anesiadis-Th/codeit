@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Clock,
   GitBranch,
-  GraduationCap,
   Hand,
   Pin,
   Repeat,
@@ -22,6 +21,7 @@ import Accordion from "../components/ui/Accordion";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import EmptyState from "../components/ui/EmptyState";
+import PageHeading from "../components/ui/PageHeading";
 import Skeleton from "../components/ui/Skeleton";
 import cody_hello from "../assets/cody_hello.png";
 import cody_wonder from "../assets/cody_wonder.png";
@@ -135,10 +135,9 @@ export default function Lessons() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="animate-fade-up my-6 flex items-center gap-3 text-3xl font-bold sm:text-4xl">
-        <GraduationCap className="size-9 shrink-0 text-accent-300" aria-hidden="true" />
-        <span className="text-gradient">{t("lessons.pageTitle")}</span>
-      </h1>
+      <PageHeading locus="lessons.c:1:1" message={t("lessons.pageNote")}>
+        {t("lessons.pageTitle")}
+      </PageHeading>
 
       {loading && (
         <div className="space-y-4">
@@ -192,7 +191,7 @@ export default function Lessons() {
                       return (
                         <li
                           key={lesson.id}
-                          className="flex flex-col gap-3 rounded-xl bg-surface-800 p-4 transition hover:bg-surface-700 sm:flex-row sm:items-center sm:justify-between"
+                          className="flex flex-col gap-3 rounded-md bg-surface-800 p-4 transition hover:bg-surface-700 sm:flex-row sm:items-center sm:justify-between"
                         >
                           <div>
                             <h4 className="font-semibold">{lesson.title}</h4>

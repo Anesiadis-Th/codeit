@@ -1,9 +1,8 @@
 const variants = {
-  raised:
-    "rounded-2xl bg-surface-900 p-6 shadow-xl shadow-black/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-brand-500/20 sm:p-8",
-  static: "rounded-xl bg-surface-800 p-5 shadow-md shadow-black/30 sm:p-6",
+  raised: "rounded-md border border-border-soft bg-surface-900 p-6 sm:p-7",
+  static: "rounded-md border border-border-soft bg-surface-800 p-5 sm:p-6",
   intro:
-    "rounded-xl border-y border-border-soft bg-[radial-gradient(circle_at_top_left,#3d1a5c,#261339)] p-5 leading-relaxed shadow-lg shadow-black/30 sm:p-6",
+    "rounded-md border-l-2 border-brand-500 bg-surface-900 p-5 leading-relaxed sm:p-6",
 };
 
 export default function Card({
@@ -29,7 +28,7 @@ export default function Card({
           src={mascot}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -right-px bottom-0 z-0 w-24 opacity-15 select-none"
+          className="pointer-events-none absolute right-0 bottom-0 z-0 w-24 opacity-20 select-none"
         />
       )}
     </div>
